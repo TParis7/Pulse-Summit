@@ -261,7 +261,7 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root section { padding: 48px 32px; }
 #ps-root .section-inner { max-width: 1100px; margin: 0 auto; }
 #ps-root .section-label {
-  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.2px;
   color: var(--ps-green); margin-bottom: 10px;
   display: flex; align-items: center; gap: 8px;
 }
@@ -285,32 +285,47 @@ html.ps-active { scroll-behavior: smooth; }
   display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
   align-items: center; margin-top: 28px;
 }
-#ps-root .about-visual {
-  background: linear-gradient(135deg, var(--ps-blue-deep) 0%, var(--ps-blue-dark) 100%);
-  border-radius: 16px; padding: 40px; position: relative; overflow: hidden;
-  min-height: 340px; display: flex; align-items: center; justify-content: center;
+#ps-root .about-photos {
+  display: grid; grid-template-columns: 1fr 1fr;
+  grid-template-rows: 170px 170px;
+  gap: 12px;
 }
-#ps-root .about-visual::before {
-  content: ''; position: absolute; top: -40px; right: -40px;
-  width: 200px; height: 200px; border-radius: 50%;
-  background: rgba(22,163,74,0.15); filter: blur(40px);
+#ps-root .about-photo {
+  background:
+    repeating-linear-gradient(135deg, rgba(29,78,216,0.05) 0 10px, transparent 10px 20px),
+    linear-gradient(135deg, rgba(219,234,254,0.7), rgba(220,252,231,0.7));
+  border: 2px dashed rgba(29,78,216,0.25);
+  border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--ps-blue-dark); font-family: 'Space Grotesk', sans-serif;
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.2px;
+  text-align: center; padding: 12px; gap: 6px;
+  position: relative;
 }
-#ps-root .about-visual::after {
-  content: ''; position: absolute; bottom: -30px; left: -30px;
-  width: 160px; height: 160px; border-radius: 50%;
-  background: rgba(59,130,246,0.2); filter: blur(40px);
+#ps-root .about-photo svg {
+  width: 26px; height: 26px; stroke: var(--ps-blue); fill: none;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.75;
 }
-#ps-root .about-visual-inner { position: relative; z-index: 1; text-align: center; }
-#ps-root .about-visual .big-quote {
+#ps-root .about-photo span.ap-label { color: var(--ps-text-light); font-weight: 500; font-size: 11.5px; }
+#ps-root .about-photo.tall { grid-row: 1 / span 2; }
+#ps-root .about-pull-quote {
+  margin-top: 36px;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, rgba(219,234,254,0.5) 0%, rgba(220,252,231,0.5) 100%);
+  border-left: 4px solid var(--ps-green);
+  border-radius: 0 14px 14px 0;
+  text-align: center;
+}
+#ps-root .about-pull-quote .big-quote {
   font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700;
-  color: #fff; line-height: 1.35;
+  color: var(--ps-text-dark); line-height: 1.35;
 }
-#ps-root .about-visual .big-quote em {
+#ps-root .about-pull-quote .big-quote em {
   font-style: normal;
-  background: linear-gradient(90deg, var(--ps-blue-bright), var(--ps-green-light));
+  background: linear-gradient(90deg, var(--ps-blue), var(--ps-green));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-#ps-root .about-visual .quote-attr { margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.45); }
+#ps-root .about-pull-quote .quote-attr { margin-top: 12px; font-size: 13px; color: var(--ps-text-light); }
 #ps-root .about-text p { color: var(--ps-text-mid); font-size: 16px; line-height: 1.8; margin-bottom: 16px; }
 #ps-root .about-text p strong { color: var(--ps-text-dark); font-weight: 600; }
 
@@ -341,7 +356,7 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .step p { color: var(--ps-text-mid); font-size: 14.5px; line-height: 1.7; }
 #ps-root .step-tag {
   display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
-  font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.1px;
   color: var(--ps-green); background: var(--ps-green-pale); padding: 5px 12px; border-radius: 6px;
 }
 
@@ -433,8 +448,8 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .tier-badge.gold { background: rgba(22,163,74,0.08); }
 #ps-root .tier-badge.gold svg { stroke: var(--ps-green); }
 #ps-root .tier-name {
-  font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 2px; color: var(--ps-text-light);
+  font-family: 'Space Grotesk', sans-serif; font-size: 14.5px; font-weight: 600;
+  letter-spacing: 0.2px; color: var(--ps-text-light);
   margin-bottom: 6px;
 }
 #ps-root .tier-price {
@@ -467,24 +482,34 @@ html.ps-active { scroll-behavior: smooth; }
 
 /* ═══════════ FUNDING BAROMETER ═══════════ */
 #ps-root .funding-barometer {
-  background: linear-gradient(135deg, #ffffff 0%, var(--ps-off-white) 100%);
-  border: 2px solid var(--ps-cool-gray);
-  border-radius: 16px;
-  padding: 32px 36px 28px;
-  margin: 28px auto 32px;
-  max-width: 820px;
-  box-shadow: 0 8px 40px rgba(29,78,216,0.06);
+  background:
+    radial-gradient(ellipse at 15% 40%, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0) 55%),
+    radial-gradient(ellipse at 85% 60%, rgba(22,163,74,0.10) 0%, rgba(22,163,74,0) 55%),
+    linear-gradient(135deg, rgba(219,234,254,0.55) 0%, rgba(220,252,231,0.55) 100%);
+  border: 1px solid rgba(29,78,216,0.10);
+  border-radius: 14px;
+  padding: 22px 28px;
+  margin: 28px 0 32px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(29,78,216,0.04);
   position: relative; overflow: hidden;
 }
 #ps-root .funding-barometer::before {
   content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: linear-gradient(90deg, var(--ps-blue), var(--ps-green));
+  opacity: 0.8;
 }
+#ps-root .barometer-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 32px; align-items: center;
+}
+#ps-root .barometer-copy { min-width: 0; }
+#ps-root .barometer-bar { min-width: 0; }
 #ps-root .barometer-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
-  color: var(--ps-green); margin-bottom: 12px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.2px;
+  color: var(--ps-green); margin-bottom: 8px;
 }
 #ps-root .barometer-dot {
   width: 8px; height: 8px; border-radius: 50%;
@@ -496,19 +521,19 @@ html.ps-active { scroll-behavior: smooth; }
   animation: ps-ping 2s cubic-bezier(0,0,0.2,1) infinite;
 }
 #ps-root .funding-barometer h3 {
-  font-size: 24px; font-weight: 800; color: var(--ps-text-dark);
-  margin-bottom: 12px; letter-spacing: -0.5px; line-height: 1.2;
+  font-size: 22px; font-weight: 800; color: var(--ps-text-dark);
+  margin-bottom: 8px; letter-spacing: -0.5px; line-height: 1.2;
 }
-#ps-root .funding-barometer > p {
-  font-size: 15px; color: var(--ps-text-mid); line-height: 1.7;
-  margin-bottom: 24px;
+#ps-root .funding-barometer .barometer-copy p {
+  font-size: 14.5px; color: var(--ps-text-mid); line-height: 1.6;
+  margin-bottom: 0;
 }
-#ps-root .funding-barometer > p strong { color: var(--ps-text-dark); font-weight: 700; }
+#ps-root .funding-barometer .barometer-copy p strong { color: var(--ps-text-dark); font-weight: 700; }
 #ps-root .barometer-track {
   position: relative;
-  height: 16px; border-radius: 100px;
-  background: var(--ps-cool-gray);
-  overflow: hidden; margin-bottom: 12px;
+  height: 14px; border-radius: 100px;
+  background: rgba(15,29,71,0.08);
+  overflow: hidden; margin-bottom: 10px;
 }
 #ps-root .barometer-fill {
   position: absolute; top: 0; left: 0; bottom: 0;
@@ -521,10 +546,11 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .barometer-labels {
   display: flex; justify-content: space-between; align-items: baseline;
   font-size: 13.5px; color: var(--ps-text-light);
+  margin-bottom: 10px;
 }
 #ps-root .barometer-labels .raised strong {
   font-family: 'Space Grotesk', sans-serif;
-  color: var(--ps-green); font-size: 20px; font-weight: 800;
+  color: var(--ps-green); font-size: 19px; font-weight: 800;
   margin-right: 4px;
 }
 #ps-root .barometer-labels .goal strong {
@@ -532,13 +558,12 @@ html.ps-active { scroll-behavior: smooth; }
   color: var(--ps-text-dark); font-weight: 800;
 }
 #ps-root .barometer-note {
-  margin-top: 18px; padding-top: 16px;
-  border-top: 1px solid var(--ps-cool-gray);
-  font-size: 13px; color: var(--ps-text-mid); line-height: 1.65;
-  display: flex; align-items: flex-start; gap: 10px;
+  margin-top: 10px;
+  font-size: 12.5px; color: var(--ps-text-mid); line-height: 1.6;
+  display: flex; align-items: flex-start; gap: 8px;
 }
 #ps-root .barometer-note svg {
-  flex-shrink: 0; width: 18px; height: 18px;
+  flex-shrink: 0; width: 16px; height: 16px;
   stroke: var(--ps-blue); fill: none; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round;
   margin-top: 1px;
@@ -633,7 +658,7 @@ html.ps-active { scroll-behavior: smooth; }
 @media (max-width: 1024px) {
   #ps-root .tier-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
   #ps-root .about-grid { grid-template-columns: 1fr; gap: 24px; }
-  #ps-root .about-visual { min-height: 220px; }
+  #ps-root .about-photos { grid-template-rows: 160px 160px; }
   #ps-root .track-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -676,12 +701,15 @@ html.ps-active { scroll-behavior: smooth; }
   /* Section headers mobile */
   #ps-root .section-title { font-size: 26px; margin-bottom: 10px; }
   #ps-root .section-subtitle { font-size: 14px; }
-  #ps-root .section-label { font-size: 11px; letter-spacing: 2px; margin-bottom: 8px; }
+  #ps-root .section-label { font-size: 12px; letter-spacing: 0.1px; margin-bottom: 8px; }
 
   /* About mobile */
   #ps-root .about-grid { grid-template-columns: 1fr; gap: 24px; }
-  #ps-root .about-visual { min-height: 200px; padding: 28px; }
-  #ps-root .about-visual .big-quote { font-size: 22px; }
+  #ps-root .about-photos { grid-template-rows: 140px 140px; gap: 10px; }
+  #ps-root .about-photo { font-size: 11.5px; padding: 10px; }
+  #ps-root .about-photo svg { width: 22px; height: 22px; }
+  #ps-root .about-pull-quote { margin-top: 24px; padding: 22px 20px; }
+  #ps-root .about-pull-quote .big-quote { font-size: 20px; }
   #ps-root .about-text p { font-size: 14.5px; margin-bottom: 12px; }
 
   /* Steps mobile */
@@ -713,13 +741,14 @@ html.ps-active { scroll-behavior: smooth; }
   #ps-root .tier-perks li { font-size: 13px; padding: 8px 0; }
 
   /* Barometer mobile */
-  #ps-root .funding-barometer { padding: 24px 20px 22px; border-radius: 14px; margin: 24px auto 26px; }
-  #ps-root .funding-barometer h3 { font-size: 20px; }
-  #ps-root .funding-barometer > p { font-size: 14px; margin-bottom: 20px; }
-  #ps-root .barometer-track { height: 14px; }
-  #ps-root .barometer-labels { font-size: 12.5px; }
+  #ps-root .funding-barometer { padding: 20px 18px; border-radius: 12px; margin: 24px 0 26px; }
+  #ps-root .barometer-grid { grid-template-columns: 1fr; gap: 18px; }
+  #ps-root .funding-barometer h3 { font-size: 19px; }
+  #ps-root .funding-barometer .barometer-copy p { font-size: 13.5px; }
+  #ps-root .barometer-track { height: 12px; }
+  #ps-root .barometer-labels { font-size: 12.5px; margin-bottom: 8px; }
   #ps-root .barometer-labels .raised strong { font-size: 17px; }
-  #ps-root .barometer-note { font-size: 12px; margin-top: 14px; padding-top: 12px; }
+  #ps-root .barometer-note { font-size: 12px; margin-top: 8px; }
 
   /* Register mobile */
   #ps-root .register-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -754,8 +783,8 @@ html.ps-active { scroll-behavior: smooth; }
   #ps-root .step { padding: 20px 16px; }
   #ps-root .tier-price { font-size: 32px; }
   #ps-root .register-card { padding: 24px 18px; }
-  #ps-root .funding-barometer { padding: 22px 18px; }
-  #ps-root .funding-barometer h3 { font-size: 18px; }
+  #ps-root .funding-barometer { padding: 18px 14px; }
+  #ps-root .funding-barometer h3 { font-size: 17px; }
 }
 `;
   document.head.appendChild(style);
@@ -845,12 +874,27 @@ html.ps-active { scroll-behavior: smooth; }
         <p>But many nonprofits doing incredible community work in Chicago don't have access to the digital tools they need. <strong>Pulse Summit</strong> changes that — bringing together volunteer developers, designers, and tech companies to build real solutions for real organizations over one powerful weekend.</p>
         <p>Five nonprofits will submit project briefs ahead of the event. Teams of developers will choose a challenge and build working solutions in just two days. Tech sponsors fund the event, mentor teams, and demonstrate corporate social responsibility in action.</p>
       </div>
-      <div class="about-visual">
-        <div class="about-visual-inner">
-          <div class="big-quote">&ldquo;Talent is <em>universal</em>.<br>Access is <em>not</em>.&rdquo;</div>
-          <div class="quote-attr">&mdash; The P3 founding principle</div>
+      <div class="about-photos">
+        <div class="about-photo tall">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div>Photo placeholder</div>
+          <span class="ap-label">Mentor + student moment</span>
+        </div>
+        <div class="about-photo">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div>Photo placeholder</div>
+          <span class="ap-label">P3 community event</span>
+        </div>
+        <div class="about-photo">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div>Photo placeholder</div>
+          <span class="ap-label">Students at work</span>
         </div>
       </div>
+    </div>
+    <div class="about-pull-quote">
+      <div class="big-quote">&ldquo;Talent is <em>universal</em>. Access is <em>not</em>.&rdquo;</div>
+      <div class="quote-attr">&mdash; The P3 founding principle</div>
     </div>
   </div>
 </section>
@@ -1021,22 +1065,28 @@ html.ps-active { scroll-behavior: smooth; }
 
     <!-- ═══ FUNDING BAROMETER ═══ -->
     <div class="funding-barometer" id="ps-barometer">
-      <div class="barometer-eyebrow">
-        <span class="barometer-dot"></span>
-        Event Funding Target
-      </div>
-      <h3>Help Us Light the Fuse</h3>
-      <p>Pulse Summit needs a minimum of <strong>$15,000</strong> to take flight &mdash; covering venue, meals, awards, and materials for all five nonprofit builds. Hit the goal together and the Summit happens. Fall short, and we'll regroup for a stronger moment. Every sponsor moves us forward.</p>
-      <div class="barometer-track">
-        <div class="barometer-fill" id="ps-barometerFill" style="width: 0%"></div>
-      </div>
-      <div class="barometer-labels">
-        <div class="raised"><strong>$0</strong> raised so far</div>
-        <div class="goal">Goal: <strong>$15,000</strong></div>
-      </div>
-      <div class="barometer-note">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span>If we don't reach the minimum by summit week, we'll simply reschedule to a better moment &mdash; nothing lost, just a longer runway to build something great.</span>
+      <div class="barometer-grid">
+        <div class="barometer-copy">
+          <div class="barometer-eyebrow">
+            <span class="barometer-dot"></span>
+            Event Funding Target
+          </div>
+          <h3>Help Us Light the Fuse</h3>
+          <p>Pulse Summit needs a minimum of <strong>$15,000</strong> to take flight &mdash; covering venue, meals, awards, and materials for all five nonprofit builds. Every sponsor moves us forward.</p>
+        </div>
+        <div class="barometer-bar">
+          <div class="barometer-track">
+            <div class="barometer-fill" id="ps-barometerFill" style="width: 0%"></div>
+          </div>
+          <div class="barometer-labels">
+            <div class="raised"><strong>$0</strong> raised so far</div>
+            <div class="goal">Goal: <strong>$15,000</strong></div>
+          </div>
+          <div class="barometer-note">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>If we don't reach the minimum by July 31, we'll simply reschedule to a better moment &mdash; nothing lost, just a longer runway to build something great.</span>
+          </div>
+        </div>
       </div>
     </div>
 
