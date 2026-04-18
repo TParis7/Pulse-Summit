@@ -686,6 +686,51 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .apply-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 #ps-root .apply-submit.sent { background: linear-gradient(135deg, #05c168, #03a356); box-shadow: 0 6px 24px rgba(5,193,104,0.4); }
 #ps-root .apply-submit.err { background: linear-gradient(135deg, #c13535, #8a1919); }
+#ps-root .apply-checks {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+}
+#ps-root .apply-check {
+  display: flex; align-items: center; gap: 10px;
+  font-family: Inter, sans-serif; font-size: 13.5px; font-weight: 500;
+  color: rgba(255,255,255,0.82);
+  cursor: pointer;
+  padding: 6px 4px;
+  transition: color 0.15s ease;
+}
+#ps-root .apply-check:hover { color: #fff; }
+#ps-root .apply-check input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  width: 16px; height: 16px; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+#ps-root .apply-check input[type="checkbox"]:hover {
+  border-color: rgba(5,193,104,0.7);
+}
+#ps-root .apply-check input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #05c168, #03a356);
+  border-color: #05c168;
+}
+#ps-root .apply-check input[type="checkbox"]:checked::after {
+  content: ''; position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+#ps-root .apply-check input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(5,193,104,0.25);
+}
 #ps-root .apply-fine {
   margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.45);
   text-align: center; line-height: 1.55;
@@ -846,14 +891,16 @@ html.ps-active { scroll-behavior: smooth; }
 
   /* Apply form mobile */
   #ps-root .apply-wrap { margin-top: 24px; }
-  #ps-root .apply-tabs { display: flex; width: 100%; }
-  #ps-root .apply-tab { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
-  #ps-root .apply-tab svg { width: 14px; height: 14px; }
+  #ps-root .apply-tabs { display: flex; width: 100%; flex-wrap: wrap; }
+  #ps-root .apply-tab { flex: 1 1 auto; justify-content: center; padding: 10px 8px; font-size: 12.5px; gap: 6px; min-width: 0; }
+  #ps-root .apply-tab svg { width: 13px; height: 13px; }
   #ps-root .apply-card { padding: 24px 20px 22px; border-radius: 14px; }
   #ps-root .apply-heading { font-size: 19px; }
   #ps-root .apply-lede { font-size: 13.5px; margin-bottom: 18px; }
   #ps-root .apply-grid { grid-template-columns: 1fr; gap: 12px; }
   #ps-root .apply-submit { padding: 14px 22px; font-size: 14px; }
+  #ps-root .apply-checks { grid-template-columns: 1fr; gap: 4px 0; padding: 12px 14px; }
+  #ps-root .apply-check { font-size: 13px; }
 
   /* Donate mobile */
   #ps-root .donate { padding: 48px 16px; }
@@ -1127,13 +1174,17 @@ html.ps-active { scroll-behavior: smooth; }
 
     <div class="apply-wrap">
       <div class="apply-tabs" role="tablist">
-        <button class="apply-tab active" data-panel="panel-nonprofit" type="button" role="tab">
+        <button class="apply-tab active" data-panel="panel-nonprofit" data-apptype="Nonprofit Candidate" type="button" role="tab">
           <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          I'm a Nonprofit
+          Nonprofit Candidate
         </button>
-        <button class="apply-tab" data-panel="panel-supporter" type="button" role="tab">
+        <button class="apply-tab" data-panel="panel-sponsor" data-apptype="Event Sponsor" type="button" role="tab">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Event Sponsor
+        </button>
+        <button class="apply-tab" data-panel="panel-developer" data-apptype="Volunteer Developer" type="button" role="tab">
           <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14.5" y1="4" x2="9.5" y2="20"/></svg>
-          Sponsor &middot; Developer &middot; Mentor
+          Volunteer Developer
         </button>
       </div>
 
@@ -1179,7 +1230,7 @@ html.ps-active { scroll-behavior: smooth; }
                   <option>Community &amp; Social Services</option>
                   <option>Youth Development</option>
                   <option>Workforce Development</option>
-                  <option>Arts &amp; Culture</option>
+                  <option>STEM, Arts, Culture</option>
                   <option>Other</option>
                 </select>
               </div>
@@ -1206,25 +1257,58 @@ html.ps-active { scroll-behavior: smooth; }
           </form>
         </div>
 
-        <!-- ═══ SUPPORTER PANEL ═══ -->
-        <div class="apply-panel" id="panel-supporter" role="tabpanel">
+        <!-- ═══ SPONSOR PANEL ═══ -->
+        <div class="apply-panel" id="panel-sponsor" role="tabpanel">
           <div class="apply-heading-wrap">
-            <div class="apply-heading">Sponsor, Developer, or Mentor Application</div>
+            <div class="apply-heading">Event Sponsor Application</div>
           </div>
-          <p class="apply-lede">Pick the role that fits best. Sponsors fund the event; developers, designers, and mentors power the weekend.</p>
-          <form id="ps-form-supporter" class="ps-apply-form" data-type="supporter" novalidate>
+          <p class="apply-lede">Back the Summit, support five nonprofits, and put your brand in front of Chicago's tech-for-good community.</p>
+          <form id="ps-form-sponsor" class="ps-apply-form" data-type="sponsor" novalidate>
             <div class="apply-grid">
+              <div class="apply-field">
+                <label class="apply-label">Your Name <span class="req">*</span></label>
+                <input type="text" name="contactName" class="apply-input" placeholder="Jane Smith" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Email <span class="req">*</span></label>
+                <input type="email" name="contactEmail" class="apply-input" placeholder="jane@company.com" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Company / Organization <span class="req">*</span></label>
+                <input type="text" name="company" class="apply-input" placeholder="Your company" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Title / Role</label>
+                <input type="text" name="title" class="apply-input" placeholder="VP of Community Impact">
+              </div>
               <div class="apply-field full">
-                <label class="apply-label">I'd like to contribute as <span class="req">*</span></label>
-                <select name="role" class="apply-select" required>
+                <label class="apply-label">Sponsorship tier <span class="req">*</span></label>
+                <select name="tier" class="apply-select" required>
                   <option value="">Select&hellip;</option>
-                  <option>Sponsor (corporate or community)</option>
-                  <option>Developer / Engineer</option>
-                  <option>Designer (UX, brand, content)</option>
-                  <option>Mentor / Advisor</option>
-                  <option>Volunteer (general)</option>
+                  <option>Community &mdash; $2,000</option>
+                  <option>Impact &mdash; $10,000</option>
+                  <option>Visionary &mdash; $25,000</option>
+                  <option>Custom / Let's talk</option>
                 </select>
               </div>
+              <div class="apply-field full">
+                <label class="apply-label">Anything else we should know?</label>
+                <textarea name="notes" class="apply-textarea" rows="3" placeholder="Goals, timing, specific asks&hellip;"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="apply-submit">Submit Application <span>&rarr;</span></button>
+            <div class="apply-fine">We'll reach out within a few days to finalize sponsorship details.</div>
+          </form>
+        </div>
+
+        <!-- ═══ DEVELOPER PANEL ═══ -->
+        <div class="apply-panel" id="panel-developer" role="tabpanel">
+          <div class="apply-heading-wrap">
+            <div class="apply-heading">Volunteer Developer Application</div>
+          </div>
+          <p class="apply-lede">Bring your skills to the weekend &mdash; build real tools for real nonprofits alongside a team.</p>
+          <form id="ps-form-developer" class="ps-apply-form" data-type="developer" novalidate>
+            <div class="apply-grid">
               <div class="apply-field">
                 <label class="apply-label">Your Name <span class="req">*</span></label>
                 <input type="text" name="contactName" class="apply-input" placeholder="Jane Smith" required>
@@ -1239,36 +1323,25 @@ html.ps-active { scroll-behavior: smooth; }
               </div>
               <div class="apply-field">
                 <label class="apply-label">Title / Role</label>
-                <input type="text" name="title" class="apply-input" placeholder="(optional)">
+                <input type="text" name="title" class="apply-input" placeholder="Software Engineer">
               </div>
-              <div class="apply-field">
-                <label class="apply-label">Sponsorship tier (if sponsor)</label>
-                <select name="tier" class="apply-select">
-                  <option value="">Not applicable</option>
-                  <option>Community &mdash; $2,000</option>
-                  <option>Impact &mdash; $10,000</option>
-                  <option>Visionary &mdash; $25,000</option>
-                  <option>Custom / Let's talk</option>
-                </select>
-              </div>
-              <div class="apply-field">
-                <label class="apply-label">Primary skills (if dev/designer)</label>
-                <select name="skills" class="apply-select">
-                  <option value="">Not applicable</option>
-                  <option>Frontend / Web</option>
-                  <option>Backend / API</option>
-                  <option>Full-stack</option>
-                  <option>Mobile (iOS / Android)</option>
-                  <option>AI / ML</option>
-                  <option>Design (UX/UI, brand)</option>
-                  <option>Data / Analytics</option>
-                  <option>Product / PM</option>
-                  <option>Other</option>
-                </select>
+              <div class="apply-field full">
+                <label class="apply-label">Primary Skills <span class="req">*</span></label>
+                <div class="apply-checks" role="group" aria-label="Primary Skills">
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Frontend / Web"><span>Frontend / Web</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Backend / API"><span>Backend / API</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Full-stack"><span>Full-stack</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Mobile (iOS / Android)"><span>Mobile (iOS / Android)</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="AI / ML"><span>AI / ML</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Design (UX/UI, brand)"><span>Design (UX/UI, brand)</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Data / Analytics"><span>Data / Analytics</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Product / PM"><span>Product / PM</span></label>
+                  <label class="apply-check"><input type="checkbox" name="skills" value="Other"><span>Other</span></label>
+                </div>
               </div>
               <div class="apply-field full">
                 <label class="apply-label">Anything else we should know?</label>
-                <textarea name="notes" class="apply-textarea" rows="3" placeholder="Availability, interests, team size, specific nonprofit you want to help&hellip;"></textarea>
+                <textarea name="notes" class="apply-textarea" rows="3" placeholder="Availability, team preferences, nonprofits you'd love to help&hellip;"></textarea>
               </div>
             </div>
             <button type="submit" class="apply-submit">Submit Application <span>&rarr;</span></button>
@@ -1504,9 +1577,12 @@ html.ps-active { scroll-behavior: smooth; }
     }
 
     // ═══ APPLY FORM TABS + GOOGLE FORM SUBMIT ═══
-    // Google Form config — set GFORM_ID to the form's /e/ ID (from its public /formResponse URL)
-    // and map each field to the matching entry.NNNNN number from that form.
-    var GFORM_ID = 'REPLACE_WITH_GOOGLE_FORM_E_ID'; // e.g. '1FAIpQLSdXXXXXXXXXXXXXXXXXXXX'
+    // Google Form: https://forms.gle/5XLyaRss74P8rYZb8 (Nonprofit / Sponsor / Developer)
+    // GFORM_ID is the form's /e/ ID (from its public /formResponse URL).
+    // ENTRY_MAP: each field name → matching entry.NNNNN from the form's pre-filled link.
+    // APPLICATION_TYPE_ENTRY: the entry ID for the Application Type question (shared across all 3 tabs).
+    var GFORM_ID = '1FAIpQLSf1QYBaOc5Gg1yvciCLemXK0yMflRhQafPwp6BbcKVtdhy9yg';
+    var APPLICATION_TYPE_ENTRY = 'entry.PLACEHOLDER_APP_TYPE';
     var ENTRY_MAP = {
       nonprofit: {
         orgName:       'entry.PLACEHOLDER_NP_ORG_NAME',
@@ -1519,19 +1595,25 @@ html.ps-active { scroll-behavior: smooth; }
         projectTrack:  'entry.PLACEHOLDER_NP_PROJECT_TRACK',
         projectBrief:  'entry.PLACEHOLDER_NP_PROJECT_BRIEF'
       },
-      supporter: {
-        role:          'entry.PLACEHOLDER_SP_ROLE',
+      sponsor: {
         contactName:   'entry.PLACEHOLDER_SP_NAME',
         contactEmail:  'entry.PLACEHOLDER_SP_EMAIL',
         company:       'entry.PLACEHOLDER_SP_COMPANY',
         title:         'entry.PLACEHOLDER_SP_TITLE',
         tier:          'entry.PLACEHOLDER_SP_TIER',
-        skills:        'entry.PLACEHOLDER_SP_SKILLS',
         notes:         'entry.PLACEHOLDER_SP_NOTES'
+      },
+      developer: {
+        contactName:   'entry.PLACEHOLDER_DV_NAME',
+        contactEmail:  'entry.PLACEHOLDER_DV_EMAIL',
+        company:       'entry.PLACEHOLDER_DV_COMPANY',
+        title:         'entry.PLACEHOLDER_DV_TITLE',
+        skills:        'entry.PLACEHOLDER_DV_SKILLS', // multi-select: appended once per checked value
+        notes:         'entry.PLACEHOLDER_DV_NOTES'
       }
     };
 
-    // Tab switching
+    // Tab switching — also tracks active Application Type for submission
     var tabs = root.querySelectorAll('.apply-tab');
     var panels = root.querySelectorAll('.apply-panel');
     tabs.forEach(function(tab) {
@@ -1542,6 +1624,11 @@ html.ps-active { scroll-behavior: smooth; }
       });
     });
 
+    function getActiveAppType() {
+      var activeTab = root.querySelector('.apply-tab.active');
+      return activeTab ? (activeTab.getAttribute('data-apptype') || '') : '';
+    }
+
     // Form submit handler
     function submitApplyForm(e) {
       e.preventDefault();
@@ -1550,7 +1637,7 @@ html.ps-active { scroll-behavior: smooth; }
       var btn = form.querySelector('.apply-submit');
       var originalBtn = btn.innerHTML;
 
-      // Basic required-field check
+      // Basic required-field check (text/select/textarea)
       var missing = false;
       form.querySelectorAll('[required]').forEach(function(el) {
         if (!el.value || !el.value.trim()) {
@@ -1575,18 +1662,41 @@ html.ps-active { scroll-behavior: smooth; }
 
       var fd = new FormData();
       var map = ENTRY_MAP[type] || {};
+
+      // Application Type (from active tab's data-apptype)
+      if (APPLICATION_TYPE_ENTRY && APPLICATION_TYPE_ENTRY.indexOf('PLACEHOLDER') === -1) {
+        fd.append(APPLICATION_TYPE_ENTRY, getActiveAppType());
+      }
+
       Object.keys(map).forEach(function(name) {
         var entryId = map[name];
         if (!entryId || entryId.indexOf('PLACEHOLDER') !== -1) return;
+
+        // Checkbox multi-value fields (e.g. skills)
+        var checks = form.querySelectorAll('input[type="checkbox"][name="' + name + '"]');
+        if (checks.length) {
+          checks.forEach(function(cb) {
+            if (cb.checked) fd.append(entryId, cb.value || '');
+          });
+          return;
+        }
+
+        // Single input/select/textarea
         var el = form.querySelector('[name="' + name + '"]');
         if (el) fd.append(entryId, el.value || '');
       });
 
-      if (!GFORM_ID || GFORM_ID.indexOf('REPLACE') !== -1) {
-        // Not yet wired — simulate success (for visual testing) and log payload
-        console.warn('[ps-apply] Google Form not yet wired. Payload:', Object.fromEntries(fd));
+      if (!GFORM_ID || GFORM_ID.indexOf('REPLACE') !== -1 || hasPlaceholderEntries(map)) {
+        // Not yet fully wired — simulate success and log payload for inspection
+        var payload = {};
+        fd.forEach(function(v, k) {
+          if (payload[k] === undefined) payload[k] = v;
+          else if (Array.isArray(payload[k])) payload[k].push(v);
+          else payload[k] = [payload[k], v];
+        });
+        console.warn('[ps-apply] Google Form entry IDs pending. Tab:', type, 'AppType:', getActiveAppType(), 'Payload:', payload);
         btn.classList.add('sent');
-        btn.innerHTML = 'Received ✓ (form pending wire-up)';
+        btn.innerHTML = 'Received ✓ (wire-up pending)';
         setTimeout(function() {
           btn.disabled = false;
           btn.classList.remove('sent');
@@ -1614,6 +1724,14 @@ html.ps-active { scroll-behavior: smooth; }
           btn.innerHTML = originalBtn;
         }, 3500);
       });
+    }
+
+    function hasPlaceholderEntries(map) {
+      var keys = Object.keys(map);
+      for (var i = 0; i < keys.length; i++) {
+        if (String(map[keys[i]]).indexOf('PLACEHOLDER') !== -1) return true;
+      }
+      return false;
     }
 
     root.querySelectorAll('.ps-apply-form').forEach(function(f) {
