@@ -30,7 +30,7 @@
   // ═══ 1. ASSET URLS ═══
   // P3 logo hosted on Webflow CDN (same asset the mentorship guide uses) so it loads
   // instantly even before the GitHub repo is synced.
-  var LOGO = 'https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b04a49d86c8d9ea145304a_p3-logo-horizontal.png';
+  var LOGO = 'https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b02f65f0068e9fb16f0df1_P3%20Logo.svg';
   // Hero looping video background (re-uses the homepage hero video)
   var HERO_VIDEO = 'https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7%2F69b04a6712d5fdbe9b4e51f8_p3-hero-bg_mp4.mp4';
   // Carousel + background photos live in the tparis7/Pulse-Summit GitHub repo
@@ -115,17 +115,22 @@ html.ps-active { scroll-behavior: smooth; }
   min-height: 68px !important;
   height: auto !important;
 }
-/* Matches homepage .p3-nav-logo img (max-height: 36px). */
+/* Matches homepage .p3-nav-logo img (rendered 116×36, from P3%20Logo.svg). */
 #ps-root .nav-logo { height: 36px !important; max-height: 36px !important; width: auto; filter: brightness(0) invert(1); object-fit: contain; }
-#ps-root .nav-links { display: flex; align-items: center; gap: 28px; }
+/* Matches homepage .p3-nav-links: gap 32px, Inter 14px/500, color rgba(255,255,255,0.85). */
+#ps-root .nav-links { display: flex; align-items: center; gap: 32px !important; }
 #ps-root .nav-links a {
-  font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.7);
-  letter-spacing: 0.3px; transition: color 0.2s;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px !important; font-weight: 500 !important;
+  color: rgba(255,255,255,0.85) !important;
+  letter-spacing: normal !important; transition: color 0.2s;
 }
-#ps-root .nav-links a:hover { color: #fff; }
+#ps-root .nav-links a:hover { color: #fff !important; }
+/* Matches homepage .p3-nav-cta: pill (50px radius), 10px 24px, 14px/600, ~50px tall. */
 #ps-root .nav-cta {
   background: var(--ps-green) !important; color: #fff !important;
-  padding: 10px 22px; border-radius: 8px; font-weight: 600;
+  padding: 10px 24px !important; border-radius: 50px !important;
+  font-size: 14px !important; font-weight: 600 !important;
   text-transform: none !important;
   transition: all 0.2s; box-shadow: 0 2px 12px rgba(22,163,74,0.3);
 }
@@ -525,7 +530,9 @@ html.ps-active { scroll-behavior: smooth; }
   position: relative;
   height: 14px; border-radius: 100px;
   background: rgba(15,29,71,0.08);
-  overflow: visible; margin: 0 0 28px 0;
+  overflow: visible;
+  /* Top room for "Min $15K" pill above, bottom room for "Raised / Goal" labels below. */
+  margin: 32px 0 18px 0;
 }
 #ps-root .barometer-fill {
   position: absolute; top: 0; left: 0; bottom: 0;
@@ -554,7 +561,8 @@ html.ps-active { scroll-behavior: smooth; }
 }
 #ps-root .barometer-minimum-label {
   position: absolute;
-  top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  /* Sits ABOVE the track so it never collides with the "raised so far" label below. */
+  bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 10.5px; font-weight: 700; letter-spacing: 0.3px;
   color: var(--ps-green);
@@ -985,8 +993,8 @@ html.ps-active { scroll-behavior: smooth; }
     letter-spacing: 0; line-height: 1.1;
   }
   #ps-root .apply-tab svg { width: 16px; height: 16px; }
-  /* Barometer copy scales down + minimum label keeps from overlapping goal label */
-  #ps-root .barometer-track { margin-bottom: 32px; }
+  /* Mobile: keep Min $15K pill above the track and scale down type. */
+  #ps-root .barometer-track { margin: 30px 0 16px 0; }
   #ps-root .barometer-minimum-label { font-size: 10px; padding: 2px 6px; }
 }
 
@@ -1272,7 +1280,7 @@ html.ps-active { scroll-behavior: smooth; }
           <div class="apply-heading-wrap">
             <div class="apply-heading">Nonprofit Project Application</div>
           </div>
-          <p class="apply-lede">Tell us about your mission and the digital challenge holding it back. <strong>Five nonprofits</strong> will be selected to receive a weekend of volunteer dev talent.</p>
+          <p class="apply-lede">Tell us about your mission and the digital challenge holding it back. <strong>Five nonprofits</strong> will be selected.</p>
           <form id="ps-form-nonprofit" class="ps-apply-form" data-type="nonprofit" novalidate>
             <div class="apply-grid">
               <div class="apply-field">
@@ -1331,7 +1339,7 @@ html.ps-active { scroll-behavior: smooth; }
               </div>
             </div>
             <button type="submit" class="apply-submit">Submit Application <span>&rarr;</span></button>
-            <div class="apply-fine">We'll review applications on a rolling basis and confirm the 5 selected nonprofits at least two weeks before the Summit.</div>
+            <div class="apply-fine">We'll review applications on a rolling basis and confirm the 5 selected nonprofits by June 2026.</div>
           </form>
         </div>
 
@@ -1447,7 +1455,7 @@ html.ps-active { scroll-behavior: smooth; }
             Event Funding Target
           </div>
           <h3>Help Us Light the Fuse</h3>
-          <p><strong>$15,000</strong> is the minimum to hold the event &mdash; covering venue, meals, awards, and materials for all five nonprofit builds.</p>
+          <p><strong>$15,000 by July 31</strong> is the minimum to hold the event &mdash; covering venue, meals, awards, and materials for all five nonprofit builds.</p>
         </div>
         <div class="barometer-bar">
           <div class="barometer-track">
@@ -1459,10 +1467,6 @@ html.ps-active { scroll-behavior: smooth; }
           <div class="barometer-labels">
             <div class="raised"><strong>$0</strong> raised so far</div>
             <div class="goal">Goal: <strong>$80,000</strong></div>
-          </div>
-          <div class="barometer-note">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>If we don't reach the minimum by <strong>July 31</strong>, we'll reschedule to a better moment.</span>
           </div>
         </div>
       </div>
