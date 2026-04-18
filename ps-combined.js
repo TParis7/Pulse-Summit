@@ -121,7 +121,7 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .nav-logo { height: 36px !important; max-height: 36px !important; width: auto; filter: brightness(0) invert(1); object-fit: contain; display: block; }
 /* Matches homepage .p3-nav-links: display flex, gap 32px, line-height 30px. */
 #ps-root .nav-links { display: flex !important; align-items: center !important; gap: 32px !important; }
-/* Matches homepage .p3-nav-links a: Inter 14px/500, color rgba(255,255,255,0.85), line-height 30px, display block, padding 0, letter-spacing normal, text-transform none. */
+/* Matches homepage .p3-nav-links a: Inter 14px/500, color rgba(255,255,255,0.85), line-height 30px, display block, padding 0, letter-spacing normal, text-transform none. Font-smoothing: auto to match homepage's subpixel AA (PS body forces antialiased grayscale which makes text look lighter/thinner). */
 #ps-root .nav-links a {
   display: block !important;
   font-family: 'Inter', sans-serif !important;
@@ -131,6 +131,8 @@ html.ps-active { scroll-behavior: smooth; }
   letter-spacing: normal !important;
   text-transform: none !important;
   padding: 0 !important;
+  -webkit-font-smoothing: auto !important;
+  -moz-osx-font-smoothing: auto !important;
   transition: color 0.2s;
 }
 #ps-root .nav-links a:hover { color: #fff !important; }
@@ -147,6 +149,8 @@ html.ps-active { scroll-behavior: smooth; }
   line-height: 30px !important;
   letter-spacing: normal !important;
   text-transform: none !important;
+  -webkit-font-smoothing: auto !important;
+  -moz-osx-font-smoothing: auto !important;
   transition: all 0.2s;
   box-shadow: 0 2px 12px rgba(22,163,74,0.3);
 }
