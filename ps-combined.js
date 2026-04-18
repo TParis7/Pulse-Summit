@@ -593,41 +593,46 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .register-card:last-child .btn-primary:hover { background: var(--ps-blue-dark); }
 
 /* ═══════════ APPLICATION FORMS ═══════════ */
-#ps-root .apply-wrap { max-width: 780px; margin: 32px auto 0; position: relative; }
+#ps-root .apply-wrap { max-width: 980px; margin: 28px auto 0; position: relative; }
 #ps-root .apply-tabs {
-  display: inline-flex; gap: 4px; padding: 6px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 8px;
   background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px; margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 14px; margin-bottom: 18px;
   backdrop-filter: blur(10px);
+  width: 100%;
 }
 #ps-root .apply-tab {
-  background: transparent; border: none; cursor: pointer;
-  color: rgba(255,255,255,0.65);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  color: rgba(255,255,255,0.78);
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px; font-weight: 600; letter-spacing: 0.1px;
-  padding: 10px 20px; border-radius: 8px;
-  transition: all 0.25s; display: inline-flex; align-items: center; gap: 8px;
+  font-size: 15.5px; font-weight: 700; letter-spacing: 0.15px;
+  padding: 14px 18px; border-radius: 10px;
+  transition: all 0.25s; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
 }
-#ps-root .apply-tab svg { width: 16px; height: 16px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke: currentColor; }
-#ps-root .apply-tab:hover { color: #fff; }
+#ps-root .apply-tab svg { width: 18px; height: 18px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke: currentColor; }
+#ps-root .apply-tab:hover { color: #fff; background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.18); }
 #ps-root .apply-tab.active {
   background: linear-gradient(135deg, var(--ps-green), var(--ps-blue));
-  color: #fff; box-shadow: 0 4px 14px rgba(22,163,74,0.25);
+  color: #fff; border-color: transparent;
+  box-shadow: 0 6px 22px rgba(22,163,74,0.38), 0 0 0 1px rgba(255,255,255,0.12) inset;
+  transform: translateY(-1px);
 }
 #ps-root .apply-card {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.10);
   border-radius: 18px;
-  padding: 36px 36px 32px;
+  padding: 26px 30px 24px;
   backdrop-filter: blur(12px);
   box-shadow: 0 10px 40px rgba(0,0,0,0.15);
 }
 #ps-root .apply-panel { display: none; }
 #ps-root .apply-panel.active { display: block; }
-#ps-root .apply-lede { color: rgba(255,255,255,0.6); font-size: 14.5px; line-height: 1.65; margin-bottom: 22px; }
+#ps-root .apply-lede { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.55; margin-bottom: 16px; }
 #ps-root .apply-lede strong { color: #fff; font-weight: 600; }
-#ps-root .apply-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+#ps-root .apply-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; }
 #ps-root .apply-field { display: flex; flex-direction: column; gap: 6px; }
 #ps-root .apply-field.full { grid-column: 1 / -1; }
 #ps-root .apply-label {
@@ -667,7 +672,7 @@ html.ps-active { scroll-behavior: smooth; }
   padding-right: 36px;
 }
 #ps-root .apply-select option { background: var(--ps-blue-deep); color: #fff; }
-#ps-root .apply-textarea { resize: vertical; min-height: 84px; font-family: 'Inter', sans-serif; line-height: 1.55; }
+#ps-root .apply-textarea { resize: vertical; min-height: 68px; font-family: 'Inter', sans-serif; line-height: 1.5; }
 #ps-root .apply-submit {
   width: 100%; margin-top: 18px;
   background: linear-gradient(135deg, var(--ps-green), var(--ps-green-dark));
@@ -890,11 +895,11 @@ html.ps-active { scroll-behavior: smooth; }
   #ps-root .register-card .btn-primary { padding: 14px 24px; font-size: 14px; }
 
   /* Apply form mobile */
-  #ps-root .apply-wrap { margin-top: 24px; }
-  #ps-root .apply-tabs { display: flex; width: 100%; flex-wrap: wrap; }
-  #ps-root .apply-tab { flex: 1 1 auto; justify-content: center; padding: 10px 8px; font-size: 12.5px; gap: 6px; min-width: 0; }
-  #ps-root .apply-tab svg { width: 13px; height: 13px; }
-  #ps-root .apply-card { padding: 24px 20px 22px; border-radius: 14px; }
+  #ps-root .apply-wrap { margin-top: 22px; }
+  #ps-root .apply-tabs { grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 6px; border-radius: 12px; }
+  #ps-root .apply-tab { padding: 11px 6px; font-size: 12.5px; gap: 6px; min-width: 0; font-weight: 700; }
+  #ps-root .apply-tab svg { width: 14px; height: 14px; }
+  #ps-root .apply-card { padding: 22px 18px 20px; border-radius: 14px; }
   #ps-root .apply-heading { font-size: 19px; }
   #ps-root .apply-lede { font-size: 13.5px; margin-bottom: 18px; }
   #ps-root .apply-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -1582,34 +1587,35 @@ html.ps-active { scroll-behavior: smooth; }
     // ENTRY_MAP: each field name → matching entry.NNNNN from the form's pre-filled link.
     // APPLICATION_TYPE_ENTRY: the entry ID for the Application Type question (shared across all 3 tabs).
     var GFORM_ID = '1FAIpQLSf1QYBaOc5Gg1yvciCLemXK0yMflRhQafPwp6BbcKVtdhy9yg';
-    var APPLICATION_TYPE_ENTRY = 'entry.PLACEHOLDER_APP_TYPE';
+    var APPLICATION_TYPE_ENTRY = 'entry.1097444396';
+    // Shared fields across tabs use the same entry IDs (single Google Form, branched by Application Type).
     var ENTRY_MAP = {
       nonprofit: {
-        orgName:       'entry.PLACEHOLDER_NP_ORG_NAME',
-        orgWebsite:    'entry.PLACEHOLDER_NP_WEBSITE',
-        contactName:   'entry.PLACEHOLDER_NP_CONTACT_NAME',
-        contactRole:   'entry.PLACEHOLDER_NP_CONTACT_ROLE',
-        contactEmail:  'entry.PLACEHOLDER_NP_CONTACT_EMAIL',
-        contactPhone:  'entry.PLACEHOLDER_NP_CONTACT_PHONE',
-        missionArea:   'entry.PLACEHOLDER_NP_MISSION_AREA',
-        projectTrack:  'entry.PLACEHOLDER_NP_PROJECT_TRACK',
-        projectBrief:  'entry.PLACEHOLDER_NP_PROJECT_BRIEF'
+        orgName:       'entry.872383194',
+        orgWebsite:    'entry.1535411882',
+        contactName:   'entry.1104467785',
+        contactRole:   'entry.2016913964',
+        contactEmail:  'entry.502489052',
+        contactPhone:  'entry.110425999',
+        missionArea:   'entry.381169465',
+        projectTrack:  'entry.2138514737',
+        projectBrief:  'entry.265627140'
       },
       sponsor: {
-        contactName:   'entry.PLACEHOLDER_SP_NAME',
-        contactEmail:  'entry.PLACEHOLDER_SP_EMAIL',
-        company:       'entry.PLACEHOLDER_SP_COMPANY',
-        title:         'entry.PLACEHOLDER_SP_TITLE',
-        tier:          'entry.PLACEHOLDER_SP_TIER',
-        notes:         'entry.PLACEHOLDER_SP_NOTES'
+        contactName:   'entry.1104467785',
+        contactEmail:  'entry.502489052',
+        company:       'entry.872383194',
+        title:         'entry.2016913964',
+        tier:          'entry.1382850759',
+        notes:         'entry.1648607451'
       },
       developer: {
-        contactName:   'entry.PLACEHOLDER_DV_NAME',
-        contactEmail:  'entry.PLACEHOLDER_DV_EMAIL',
-        company:       'entry.PLACEHOLDER_DV_COMPANY',
-        title:         'entry.PLACEHOLDER_DV_TITLE',
-        skills:        'entry.PLACEHOLDER_DV_SKILLS', // multi-select: appended once per checked value
-        notes:         'entry.PLACEHOLDER_DV_NOTES'
+        contactName:   'entry.1104467785',
+        contactEmail:  'entry.502489052',
+        company:       'entry.872383194',
+        title:         'entry.2016913964',
+        skills:        'entry.182438824', // multi-select: appended once per checked value
+        notes:         'entry.1648607451'
       }
     };
 
@@ -1647,6 +1653,19 @@ html.ps-active { scroll-behavior: smooth; }
           el.style.borderColor = '';
         }
       });
+      // Developer tab: at least one Primary Skill must be checked
+      if (type === 'developer') {
+        var skillBoxes = form.querySelectorAll('input[type="checkbox"][name="skills"]');
+        var anyChecked = false;
+        skillBoxes.forEach(function(cb) { if (cb.checked) anyChecked = true; });
+        var checksWrap = form.querySelector('.apply-checks');
+        if (!anyChecked) {
+          missing = true;
+          if (checksWrap) checksWrap.style.borderColor = '#c13535';
+        } else if (checksWrap) {
+          checksWrap.style.borderColor = '';
+        }
+      }
       if (missing) {
         btn.classList.add('err');
         btn.innerHTML = 'Please fill required fields';
