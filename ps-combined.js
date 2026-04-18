@@ -6,8 +6,8 @@
      into a scoped #ps-root. All CSS scoped with --ps- prefix vars.
      Source HTML: tparis7/Pulse-Summit/index.html
      Mockup:      https://tparis7.github.io/Pulse-Summit/
-     Dates:       October 2–3, 2026 (updated from original Sept 17–18)
-     Barometer:   $15K minimum funding target inside Invest in Impact
+     Dates:       October 3, 2026 (single-day · 12-hour sprint)
+     Barometer:   $15K minimum · $80K main goal inside Invest in Impact
      ══════════════════════════════════════════════════════════════ */
 
   // Guard against double execution
@@ -111,9 +111,11 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .nav-inner {
   max-width: 1200px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 32px;
+  padding: 16px 40px;
+  min-height: 68px;
 }
-#ps-root .nav-logo { height: 38px; width: auto; filter: brightness(0) invert(1); }
+/* Matches homepage .p3-nav-logo img (max-height: 36px). */
+#ps-root .nav-logo { height: 36px; max-height: 36px; width: auto; filter: brightness(0) invert(1); object-fit: contain; }
 #ps-root .nav-links { display: flex; align-items: center; gap: 28px; }
 #ps-root .nav-links a {
   font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.7);
@@ -518,7 +520,7 @@ html.ps-active { scroll-behavior: smooth; }
   position: relative;
   height: 14px; border-radius: 100px;
   background: rgba(15,29,71,0.08);
-  overflow: hidden; margin-bottom: 10px;
+  overflow: visible; margin: 0 0 28px 0;
 }
 #ps-root .barometer-fill {
   position: absolute; top: 0; left: 0; bottom: 0;
@@ -527,6 +529,34 @@ html.ps-active { scroll-behavior: smooth; }
   border-radius: 100px;
   transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 8px rgba(29,78,216,0.25);
+}
+/* $15K minimum threshold marker. 15000 / 80000 = 18.75% along the track. */
+#ps-root .barometer-minimum {
+  position: absolute; top: -6px; bottom: -6px;
+  left: 18.75%;
+  width: 2px;
+  background: var(--ps-green);
+  border-radius: 2px;
+  z-index: 2;
+  box-shadow: 0 0 0 2px rgba(22,163,74,0.15);
+}
+#ps-root .barometer-minimum::before {
+  content: '';
+  position: absolute; top: -3px; left: 50%; transform: translateX(-50%);
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ps-green);
+  box-shadow: 0 0 0 3px rgba(22,163,74,0.18);
+}
+#ps-root .barometer-minimum-label {
+  position: absolute;
+  top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.3px;
+  color: var(--ps-green);
+  white-space: nowrap;
+  padding: 2px 7px; border-radius: 100px;
+  background: rgba(220,252,231,0.9);
+  border: 1px solid rgba(22,163,74,0.25);
 }
 #ps-root .barometer-labels {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -805,18 +835,28 @@ html.ps-active { scroll-behavior: smooth; }
 
 @media (max-width: 768px) {
   #ps-root section { padding: 36px 16px; }
-  #ps-root .nav-inner { padding: 12px 16px; }
-  #ps-root .nav-logo { height: 32px; }
+  /* Matches homepage mobile nav: padding: 16px, height: 64px, logo max-height: 36px. */
+  #ps-root .nav-inner { padding: 16px; min-height: 64px; }
+  #ps-root .nav-logo { height: 36px; max-height: 36px; }
   #ps-root .nav-links {
     display: none; flex-direction: column; gap: 0;
     position: absolute; top: 100%; left: 0; right: 0;
     background: rgba(15,29,71,0.98); backdrop-filter: blur(20px);
-    padding: 8px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 12px 24px 22px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
   }
   #ps-root .nav-links.open { display: flex; }
-  #ps-root .nav-links a { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 15px; }
+  #ps-root .nav-links a { padding: 15px 2px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 15.5px; letter-spacing: 0.2px; }
   #ps-root .nav-links a:last-child { border-bottom: none; }
-  #ps-root .nav-cta { text-align: center; margin-top: 4px; display: block; }
+  /* Register CTA inside hamburger drawer — extra padding + breathing room so it reads as a primary action. */
+  #ps-root .nav-cta {
+    text-align: center; display: block;
+    margin: 14px 0 4px;
+    padding: 15px 24px;
+    font-size: 15px; letter-spacing: 0.3px;
+    border-radius: 10px;
+    box-shadow: 0 6px 22px rgba(22,163,74,0.38);
+  }
   #ps-root .mobile-toggle { display: block; }
 
   /* Hero mobile */
@@ -896,9 +936,16 @@ html.ps-active { scroll-behavior: smooth; }
 
   /* Apply form mobile */
   #ps-root .apply-wrap { margin-top: 22px; }
-  #ps-root .apply-tabs { grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 6px; border-radius: 12px; }
-  #ps-root .apply-tab { padding: 11px 6px; font-size: 12.5px; gap: 6px; min-width: 0; font-weight: 700; }
-  #ps-root .apply-tab svg { width: 14px; height: 14px; }
+  #ps-root .apply-tabs {
+    grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 6px;
+    border-radius: 12px;
+  }
+  #ps-root .apply-tab {
+    padding: 12px 8px; font-size: 12.5px; gap: 6px; min-width: 0; font-weight: 700;
+    flex-direction: column; line-height: 1.15;
+    text-align: center; letter-spacing: 0.1px;
+  }
+  #ps-root .apply-tab svg { width: 16px; height: 16px; }
   #ps-root .apply-card { padding: 22px 18px 20px; border-radius: 14px; }
   #ps-root .apply-heading { font-size: 19px; }
   #ps-root .apply-lede { font-size: 13.5px; margin-bottom: 18px; }
@@ -922,6 +969,20 @@ html.ps-active { scroll-behavior: smooth; }
   #ps-root .footer-copy { font-size: 11px; margin-top: 16px; padding-top: 16px; }
 }
 
+/* Small phones (iPhone SE / 420px and narrower) */
+@media (max-width: 420px) {
+  /* Tab labels wrap better at small widths (icon above label, tight padding) */
+  #ps-root .apply-tabs { gap: 4px; padding: 5px; }
+  #ps-root .apply-tab {
+    padding: 11px 4px; font-size: 11.5px; gap: 4px;
+    letter-spacing: 0; line-height: 1.1;
+  }
+  #ps-root .apply-tab svg { width: 16px; height: 16px; }
+  /* Barometer copy scales down + minimum label keeps from overlapping goal label */
+  #ps-root .barometer-track { margin-bottom: 32px; }
+  #ps-root .barometer-minimum-label { font-size: 10px; padding: 2px 6px; }
+}
+
 /* Extra small phones */
 @media (max-width: 375px) {
   #ps-root .hero h1 { font-size: 32px; }
@@ -935,6 +996,12 @@ html.ps-active { scroll-behavior: smooth; }
   #ps-root .register-card { padding: 24px 18px; }
   #ps-root .funding-barometer { padding: 18px 14px; }
   #ps-root .funding-barometer h3 { font-size: 17px; }
+  /* Tabs: shrink further; keep icon + label stacked */
+  #ps-root .apply-tab { padding: 10px 3px; font-size: 11px; }
+  #ps-root .apply-tab svg { width: 15px; height: 15px; }
+  /* Nav compress on very narrow screens */
+  #ps-root .nav-inner { padding: 14px; min-height: 60px; }
+  #ps-root .nav-logo { height: 32px; max-height: 32px; }
 }
 `;
   document.head.appendChild(style);
@@ -978,13 +1045,13 @@ html.ps-active { scroll-behavior: smooth; }
   <div class="hero-overlay"></div>
   <div class="hero-mesh"></div>
   <div class="hero-content">
-    <div class="hero-badge"><span class="pulse"></span> October 2–3, 2026 &middot; Chicago, IL</div>
+    <div class="hero-badge"><span class="pulse"></span> October 3, 2026 &middot; Chicago, IL</div>
     <h1>Pulse Summit<span class="line2">Technology with Heart</span></h1>
-    <p class="hero-sub">A 2-day hackathon where developers and tech companies build real digital solutions for 5 Chicago nonprofits.</p>
+    <p class="hero-sub">A 12-hour hackathon where developers and tech companies build real digital solutions for 5 Chicago nonprofits.</p>
     <div class="hero-meta">
       <span>
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Oct 2–3, 2026
+        Oct 3, 2026
       </span>
       <span>
         <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1005,7 +1072,7 @@ html.ps-active { scroll-behavior: smooth; }
 <!-- ═══ STATS BAR ═══ -->
 <div class="stats-bar">
   <div class="stats-inner">
-    <div class="stat-item"><div class="stat-number" data-target="2">0</div><div class="stat-label">Days</div></div>
+    <div class="stat-item"><div class="stat-number" data-target="12">0</div><div class="stat-label">Hours</div></div>
     <div class="stat-item"><div class="stat-number" data-target="5">0</div><div class="stat-label">Nonprofits Served</div></div>
     <div class="stat-item"><div class="stat-number" data-prefix="$" data-suffix="K" data-target="3">0</div><div class="stat-label">Grand Prize</div></div>
     <div class="stat-item"><div class="stat-number" data-target="1">0</div><div class="stat-label">Mission</div></div>
@@ -1022,11 +1089,11 @@ html.ps-active { scroll-behavior: smooth; }
       <div class="about-text">
         <p><strong>Pulse of Perseverance Project (P3)</strong> is a nonprofit EdTech career accelerator connecting underserved students with mentors through AI-powered smart matching. We've seen firsthand how the right technology can transform a mission.</p>
         <p>But many nonprofits doing incredible community work in Chicago don't have access to the digital tools they need. <strong>Pulse Summit</strong> changes that — bringing together volunteer developers, designers, and tech companies to build real solutions for real organizations over one powerful weekend.</p>
-        <p>Five nonprofits will submit project briefs ahead of the event. Teams of developers will choose a challenge and build working solutions in just two days. Tech sponsors fund the event, mentor teams, and demonstrate corporate social responsibility in action.</p>
+        <p>Five nonprofits will submit project briefs ahead of the event. Teams of developers will choose a challenge and build working solutions in a single 12-hour sprint. Tech sponsors fund the event, mentor teams, and demonstrate corporate social responsibility in action.</p>
       </div>
       <div class="about-photos">
         <div class="about-photo tall">
-          <img src="${IMG_BASE}1760104448089.jpeg" alt="P3 mentor and student moment" loading="lazy">
+          <img src="${IMG_BASE}img-7919.jpg" alt="P3 mentor and student moment" loading="lazy">
         </div>
         <div class="about-photo">
           <img src="${IMG_BASE}Copy%20of%20P3_Gala2025_0065%20copy.jpg" alt="P3 Gala 2025 gathering" loading="lazy">
@@ -1063,7 +1130,7 @@ html.ps-active { scroll-behavior: smooth; }
         </div>
         <h3>Teams Build</h3>
         <p>Volunteer developers, designers, and data scientists form teams, select a nonprofit challenge, and build a working solution over the weekend. Mentors from sponsors are available to guide teams.</p>
-        <div class="step-tag">2-day sprint</div>
+        <div class="step-tag">12-hour sprint</div>
       </div>
       <div class="step">
         <div class="step-icon" style="background:linear-gradient(135deg, #7C3AED, #A855F7); box-shadow: 0 4px 14px rgba(124,58,237,0.2);">
@@ -1374,19 +1441,22 @@ html.ps-active { scroll-behavior: smooth; }
             Event Funding Target
           </div>
           <h3>Help Us Light the Fuse</h3>
-          <p>Pulse Summit needs a minimum of <strong>$15,000</strong> to take flight &mdash; covering venue, meals, awards, and materials for all five nonprofit builds. Every sponsor moves us forward.</p>
+          <p><strong>$15,000</strong> is the minimum to hold the event &mdash; covering venue, meals, awards, and materials for all five nonprofit builds. Our main goal of <strong>$80,000</strong> unlocks the fullest Pulse Summit experience: expanded prize pool, professional production, mentor travel stipends, and post-event implementation support.</p>
         </div>
         <div class="barometer-bar">
           <div class="barometer-track">
+            <div class="barometer-minimum" aria-label="$15,000 minimum threshold">
+              <span class="barometer-minimum-label">Min $15K</span>
+            </div>
             <div class="barometer-fill" id="ps-barometerFill" style="width: 0%"></div>
           </div>
           <div class="barometer-labels">
             <div class="raised"><strong>$0</strong> raised so far</div>
-            <div class="goal">Goal: <strong>$15,000</strong></div>
+            <div class="goal">Goal: <strong>$80,000</strong></div>
           </div>
           <div class="barometer-note">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>If we don't reach the minimum by July 31, we'll simply reschedule to a better moment &mdash; nothing lost, just a longer runway to build something great.</span>
+            <span>If we don't reach the minimum by July 31, we'll reschedule to a better moment.</span>
           </div>
         </div>
       </div>
@@ -1551,9 +1621,10 @@ html.ps-active { scroll-behavior: smooth; }
       var bObs = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
           if (!e.isIntersecting) return;
-          // Currently $0 of $15K — read from data-raised if set
+          // Currently $0 of $80K main goal — read from data-raised if set.
+          // Minimum threshold at $15K is rendered as a visual marker on the track.
           var raised = parseFloat(barometer.getAttribute('data-raised') || '0');
-          var goal = parseFloat(barometer.getAttribute('data-goal') || '15000');
+          var goal = parseFloat(barometer.getAttribute('data-goal') || '80000');
           var pct = Math.max(0, Math.min(100, (raised / goal) * 100));
           // Give a tiny sliver so fill animation is visible even at 0
           fill.style.width = (pct > 0 ? pct : 0) + '%';
