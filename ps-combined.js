@@ -291,41 +291,16 @@ html.ps-active { scroll-behavior: smooth; }
   gap: 12px;
 }
 #ps-root .about-photo {
-  background:
-    repeating-linear-gradient(135deg, rgba(29,78,216,0.05) 0 10px, transparent 10px 20px),
-    linear-gradient(135deg, rgba(219,234,254,0.7), rgba(220,252,231,0.7));
-  border: 2px dashed rgba(29,78,216,0.25);
-  border-radius: 14px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: var(--ps-blue-dark); font-family: 'Space Grotesk', sans-serif;
-  font-size: 12.5px; font-weight: 600; letter-spacing: 0.2px;
-  text-align: center; padding: 12px; gap: 6px;
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(15,29,71,0.08);
   position: relative;
 }
-#ps-root .about-photo svg {
-  width: 26px; height: 26px; stroke: var(--ps-blue); fill: none;
-  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.75;
+#ps-root .about-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; transition: transform 0.5s;
 }
-#ps-root .about-photo span.ap-label { color: var(--ps-text-light); font-weight: 500; font-size: 11.5px; }
+#ps-root .about-photo:hover img { transform: scale(1.04); }
 #ps-root .about-photo.tall { grid-row: 1 / span 2; }
-#ps-root .about-pull-quote {
-  margin-top: 36px;
-  padding: 28px 32px;
-  background: linear-gradient(135deg, rgba(219,234,254,0.5) 0%, rgba(220,252,231,0.5) 100%);
-  border-left: 4px solid var(--ps-green);
-  border-radius: 0 14px 14px 0;
-  text-align: center;
-}
-#ps-root .about-pull-quote .big-quote {
-  font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700;
-  color: var(--ps-text-dark); line-height: 1.35;
-}
-#ps-root .about-pull-quote .big-quote em {
-  font-style: normal;
-  background: linear-gradient(90deg, var(--ps-blue), var(--ps-green));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-#ps-root .about-pull-quote .quote-attr { margin-top: 12px; font-size: 13px; color: var(--ps-text-light); }
 #ps-root .about-text p { color: var(--ps-text-mid); font-size: 16px; line-height: 1.8; margin-bottom: 16px; }
 #ps-root .about-text p strong { color: var(--ps-text-dark); font-weight: 600; }
 
@@ -367,14 +342,24 @@ html.ps-active { scroll-behavior: smooth; }
   border: 1px solid var(--ps-cool-gray); border-radius: 14px; padding: 28px 24px;
   transition: all 0.3s; background: #fff; position: relative; overflow: hidden;
 }
-#ps-root .track-card:hover { border-color: var(--ps-blue-light); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(29,78,216,0.08); }
+#ps-root .track-card.tint-blue {
+  background: linear-gradient(180deg, rgba(59,130,246,0.06) 0%, rgba(59,130,246,0.02) 100%);
+  border-color: rgba(29,78,216,0.15);
+}
+#ps-root .track-card.tint-green {
+  background: linear-gradient(180deg, rgba(22,163,74,0.06) 0%, rgba(22,163,74,0.02) 100%);
+  border-color: rgba(22,163,74,0.18);
+}
+#ps-root .track-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(29,78,216,0.08); }
+#ps-root .track-card.tint-blue:hover { border-color: rgba(29,78,216,0.35); box-shadow: 0 8px 28px rgba(29,78,216,0.12); }
+#ps-root .track-card.tint-green:hover { border-color: rgba(22,163,74,0.35); box-shadow: 0 8px 28px rgba(22,163,74,0.12); }
 #ps-root .track-icon {
   width: 44px; height: 44px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 14px;
 }
-#ps-root .track-icon.blue { background: rgba(29,78,216,0.08); }
-#ps-root .track-icon.green { background: rgba(22,163,74,0.08); }
+#ps-root .track-icon.blue { background: rgba(29,78,216,0.12); }
+#ps-root .track-icon.green { background: rgba(22,163,74,0.12); }
 #ps-root .track-icon svg { width: 22px; height: 22px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 #ps-root .track-icon.blue svg { stroke: var(--ps-blue); }
 #ps-root .track-icon.green svg { stroke: var(--ps-green); }
@@ -430,10 +415,10 @@ html.ps-active { scroll-behavior: smooth; }
   box-shadow: 0 8px 40px rgba(29,78,216,0.1);
 }
 #ps-root .tier-card.featured::before {
-  content: 'MOST POPULAR';
+  content: 'Most popular';
   position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
   background: linear-gradient(135deg, var(--ps-blue), var(--ps-green));
-  color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  color: #fff; font-size: 11.5px; font-weight: 600; letter-spacing: 0.2px;
   padding: 5px 16px; border-radius: 100px;
 }
 #ps-root .tier-badge {
@@ -607,6 +592,112 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .register-card:last-child .btn-primary { background: var(--ps-blue); box-shadow: 0 4px 20px rgba(29,78,216,0.35); }
 #ps-root .register-card:last-child .btn-primary:hover { background: var(--ps-blue-dark); }
 
+/* ═══════════ APPLICATION FORMS ═══════════ */
+#ps-root .apply-wrap { max-width: 780px; margin: 32px auto 0; position: relative; }
+#ps-root .apply-tabs {
+  display: inline-flex; gap: 4px; padding: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+#ps-root .apply-tab {
+  background: transparent; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.65);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.1px;
+  padding: 10px 20px; border-radius: 8px;
+  transition: all 0.25s; display: inline-flex; align-items: center; gap: 8px;
+}
+#ps-root .apply-tab svg { width: 16px; height: 16px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke: currentColor; }
+#ps-root .apply-tab:hover { color: #fff; }
+#ps-root .apply-tab.active {
+  background: linear-gradient(135deg, var(--ps-green), var(--ps-blue));
+  color: #fff; box-shadow: 0 4px 14px rgba(22,163,74,0.25);
+}
+#ps-root .apply-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  padding: 36px 36px 32px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+#ps-root .apply-panel { display: none; }
+#ps-root .apply-panel.active { display: block; }
+#ps-root .apply-lede { color: rgba(255,255,255,0.6); font-size: 14.5px; line-height: 1.65; margin-bottom: 22px; }
+#ps-root .apply-lede strong { color: #fff; font-weight: 600; }
+#ps-root .apply-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+#ps-root .apply-field { display: flex; flex-direction: column; gap: 6px; }
+#ps-root .apply-field.full { grid-column: 1 / -1; }
+#ps-root .apply-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.1px;
+  color: rgba(255,255,255,0.75);
+}
+#ps-root .apply-label .req { color: var(--ps-green-light); margin-left: 2px; }
+#ps-root .apply-input,
+#ps-root .apply-select,
+#ps-root .apply-textarea {
+  width: 100%; box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  font-size: 14.5px; color: #fff;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: all 0.2s;
+}
+#ps-root .apply-input:focus,
+#ps-root .apply-select:focus,
+#ps-root .apply-textarea:focus {
+  outline: none;
+  border-color: var(--ps-green-light);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 3px rgba(22,163,74,0.15);
+}
+#ps-root .apply-input::placeholder,
+#ps-root .apply-textarea::placeholder { color: rgba(255,255,255,0.3); }
+#ps-root .apply-select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.55)' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+#ps-root .apply-select option { background: var(--ps-blue-deep); color: #fff; }
+#ps-root .apply-textarea { resize: vertical; min-height: 84px; font-family: 'Inter', sans-serif; line-height: 1.55; }
+#ps-root .apply-submit {
+  width: 100%; margin-top: 18px;
+  background: linear-gradient(135deg, var(--ps-green), var(--ps-green-dark));
+  color: #fff; border: none; cursor: pointer;
+  padding: 15px 28px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 15px; letter-spacing: 0.3px;
+  transition: all 0.25s;
+  box-shadow: 0 6px 24px rgba(22,163,74,0.3);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+#ps-root .apply-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(22,163,74,0.45);
+}
+#ps-root .apply-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+#ps-root .apply-submit.sent { background: linear-gradient(135deg, #05c168, #03a356); box-shadow: 0 6px 24px rgba(5,193,104,0.4); }
+#ps-root .apply-submit.err { background: linear-gradient(135deg, #c13535, #8a1919); }
+#ps-root .apply-fine {
+  margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.45);
+  text-align: center; line-height: 1.55;
+}
+#ps-root .apply-fine a { color: rgba(255,255,255,0.7); text-decoration: underline; }
+#ps-root .apply-heading {
+  color: #fff; font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px; font-weight: 700; letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+#ps-root .apply-heading-wrap { margin-bottom: 14px; }
+
 /* ═══════════ DONATE ═══════════ */
 #ps-root .donate {
   text-align: center; padding: 64px 32px;
@@ -706,10 +797,6 @@ html.ps-active { scroll-behavior: smooth; }
   /* About mobile */
   #ps-root .about-grid { grid-template-columns: 1fr; gap: 24px; }
   #ps-root .about-photos { grid-template-rows: 140px 140px; gap: 10px; }
-  #ps-root .about-photo { font-size: 11.5px; padding: 10px; }
-  #ps-root .about-photo svg { width: 22px; height: 22px; }
-  #ps-root .about-pull-quote { margin-top: 24px; padding: 22px 20px; }
-  #ps-root .about-pull-quote .big-quote { font-size: 20px; }
   #ps-root .about-text p { font-size: 14.5px; margin-bottom: 12px; }
 
   /* Steps mobile */
@@ -756,6 +843,17 @@ html.ps-active { scroll-behavior: smooth; }
   #ps-root .register-card h3 { font-size: 20px; }
   #ps-root .register-card p { font-size: 13.5px; margin-bottom: 20px; }
   #ps-root .register-card .btn-primary { padding: 14px 24px; font-size: 14px; }
+
+  /* Apply form mobile */
+  #ps-root .apply-wrap { margin-top: 24px; }
+  #ps-root .apply-tabs { display: flex; width: 100%; }
+  #ps-root .apply-tab { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
+  #ps-root .apply-tab svg { width: 14px; height: 14px; }
+  #ps-root .apply-card { padding: 24px 20px 22px; border-radius: 14px; }
+  #ps-root .apply-heading { font-size: 19px; }
+  #ps-root .apply-lede { font-size: 13.5px; margin-bottom: 18px; }
+  #ps-root .apply-grid { grid-template-columns: 1fr; gap: 12px; }
+  #ps-root .apply-submit { padding: 14px 22px; font-size: 14px; }
 
   /* Donate mobile */
   #ps-root .donate { padding: 48px 16px; }
@@ -876,25 +974,15 @@ html.ps-active { scroll-behavior: smooth; }
       </div>
       <div class="about-photos">
         <div class="about-photo tall">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <div>Photo placeholder</div>
-          <span class="ap-label">Mentor + student moment</span>
+          <img src="${IMG_BASE}1760104448089.jpeg" alt="P3 mentor and student moment" loading="lazy">
         </div>
         <div class="about-photo">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <div>Photo placeholder</div>
-          <span class="ap-label">P3 community event</span>
+          <img src="${IMG_BASE}Copy%20of%20P3_Gala2025_0065%20copy.jpg" alt="P3 Gala 2025 gathering" loading="lazy">
         </div>
         <div class="about-photo">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <div>Photo placeholder</div>
-          <span class="ap-label">Students at work</span>
+          <img src="${IMG_BASE}carousel-9.jpg" alt="P3 community celebration" loading="lazy">
         </div>
       </div>
-    </div>
-    <div class="about-pull-quote">
-      <div class="big-quote">&ldquo;Talent is <em>universal</em>. Access is <em>not</em>.&rdquo;</div>
-      <div class="quote-attr">&mdash; The P3 founding principle</div>
     </div>
   </div>
 </section>
@@ -944,42 +1032,42 @@ html.ps-active { scroll-behavior: smooth; }
     <div class="section-title">What Teams Will Build</div>
     <p class="section-subtitle">Nonprofit partners will submit projects from any of these tracks. Specific briefs shared before the event.</p>
     <div class="track-grid">
-      <div class="track-card">
+      <div class="track-card tint-blue">
         <div class="track-icon blue">
           <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
         <h3>Website Upgrades</h3>
         <p>Redesigns, accessibility improvements, mobile optimization, and CMS migrations for outdated websites.</p>
       </div>
-      <div class="track-card">
+      <div class="track-card tint-green">
         <div class="track-icon green">
           <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1.17A7 7 0 015.17 19H4a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73A2 2 0 0112 2z"/><circle cx="9" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="14" r="1" fill="currentColor" stroke="none"/></svg>
         </div>
         <h3>AI Solutions</h3>
         <p>Chatbots, smart matching tools, automated intake forms, and AI-powered workflows to multiply capacity.</p>
       </div>
-      <div class="track-card">
+      <div class="track-card tint-blue">
         <div class="track-icon blue">
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
         </div>
         <h3>Donor Management</h3>
         <p>CRM setup, donation tracking dashboards, automated receipts, and reporting tools to streamline fundraising.</p>
       </div>
-      <div class="track-card">
+      <div class="track-card tint-green">
         <div class="track-icon green">
           <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg>
         </div>
         <h3>Data Security</h3>
         <p>Security audits, encryption, FERPA/HIPAA compliance tooling, and incident response planning.</p>
       </div>
-      <div class="track-card">
+      <div class="track-card tint-blue">
         <div class="track-icon blue">
           <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
         </div>
         <h3>Social Media &amp; Marketing</h3>
         <p>Content calendars, brand kits, social media strategy, analytics dashboards, and storytelling frameworks.</p>
       </div>
-      <div class="track-card">
+      <div class="track-card tint-green">
         <div class="track-icon green">
           <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
@@ -1034,23 +1122,159 @@ html.ps-active { scroll-behavior: smooth; }
 <section class="register" id="ps-register">
   <div class="section-inner">
     <div class="section-label">Get Involved</div>
-    <div class="section-title">Join the Summit</div>
-    <div class="register-grid">
-      <div class="register-card">
-        <div class="card-icon">
+    <div class="section-title">Apply to Pulse Summit</div>
+    <p class="section-subtitle">Whether you're a nonprofit with a need or a sponsor, developer, or mentor ready to contribute &mdash; start here.</p>
+
+    <div class="apply-wrap">
+      <div class="apply-tabs" role="tablist">
+        <button class="apply-tab active" data-panel="panel-nonprofit" type="button" role="tab">
           <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <h3>I'm a Nonprofit</h3>
-        <p>Submit your organization and project brief. We'll match you with a team of developers ready to build what you need.</p>
-        <a href="https://forms.gle/NONPROFIT_PLACEHOLDER" target="_blank" class="btn-primary">Apply as a Nonprofit <span>&rarr;</span></a>
-      </div>
-      <div class="register-card">
-        <div class="card-icon">
+          I'm a Nonprofit
+        </button>
+        <button class="apply-tab" data-panel="panel-supporter" type="button" role="tab">
           <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14.5" y1="4" x2="9.5" y2="20"/></svg>
+          Sponsor &middot; Developer &middot; Mentor
+        </button>
+      </div>
+
+      <div class="apply-card">
+        <!-- ═══ NONPROFIT PANEL ═══ -->
+        <div class="apply-panel active" id="panel-nonprofit" role="tabpanel">
+          <div class="apply-heading-wrap">
+            <div class="apply-heading">Nonprofit Project Application</div>
+          </div>
+          <p class="apply-lede">Tell us about your mission and the digital challenge holding it back. <strong>Five nonprofits</strong> will be selected to receive a weekend of volunteer dev talent.</p>
+          <form id="ps-form-nonprofit" class="ps-apply-form" data-type="nonprofit" novalidate>
+            <div class="apply-grid">
+              <div class="apply-field">
+                <label class="apply-label">Organization Name <span class="req">*</span></label>
+                <input type="text" name="orgName" class="apply-input" placeholder="Your nonprofit" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Website</label>
+                <input type="url" name="orgWebsite" class="apply-input" placeholder="https://&hellip;">
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Your Name <span class="req">*</span></label>
+                <input type="text" name="contactName" class="apply-input" placeholder="Jane Smith" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Your Role <span class="req">*</span></label>
+                <input type="text" name="contactRole" class="apply-input" placeholder="Executive Director" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Work Email <span class="req">*</span></label>
+                <input type="email" name="contactEmail" class="apply-input" placeholder="jane@org.org" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Phone</label>
+                <input type="tel" name="contactPhone" class="apply-input" placeholder="(312) 555-0123">
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Mission Area <span class="req">*</span></label>
+                <select name="missionArea" class="apply-select" required>
+                  <option value="">Select&hellip;</option>
+                  <option>Education</option>
+                  <option>Health &amp; Medicine</option>
+                  <option>Community &amp; Social Services</option>
+                  <option>Youth Development</option>
+                  <option>Workforce Development</option>
+                  <option>Arts &amp; Culture</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Project Track <span class="req">*</span></label>
+                <select name="projectTrack" class="apply-select" required>
+                  <option value="">Select&hellip;</option>
+                  <option>Website Upgrades</option>
+                  <option>AI Solutions</option>
+                  <option>Donor Management</option>
+                  <option>Data Security</option>
+                  <option>Social Media &amp; Marketing</option>
+                  <option>Marketing Automation</option>
+                  <option>Other / Not sure yet</option>
+                </select>
+              </div>
+              <div class="apply-field full">
+                <label class="apply-label">Project Brief <span class="req">*</span></label>
+                <textarea name="projectBrief" class="apply-textarea" rows="3" placeholder="What problem do you want solved? What would success look like?" required></textarea>
+              </div>
+            </div>
+            <button type="submit" class="apply-submit">Submit Application <span>&rarr;</span></button>
+            <div class="apply-fine">We'll review applications on a rolling basis and confirm the 5 selected nonprofits at least two weeks before the Summit.</div>
+          </form>
         </div>
-        <h3>I'm a Developer or Sponsor</h3>
-        <p>Volunteer your skills for the weekend, or register your company as a sponsor. Corporate teams welcome.</p>
-        <a href="https://forms.gle/DEV_SPONSOR_PLACEHOLDER" target="_blank" class="btn-primary">Register Now <span>&rarr;</span></a>
+
+        <!-- ═══ SUPPORTER PANEL ═══ -->
+        <div class="apply-panel" id="panel-supporter" role="tabpanel">
+          <div class="apply-heading-wrap">
+            <div class="apply-heading">Sponsor, Developer, or Mentor Application</div>
+          </div>
+          <p class="apply-lede">Pick the role that fits best. Sponsors fund the event; developers, designers, and mentors power the weekend.</p>
+          <form id="ps-form-supporter" class="ps-apply-form" data-type="supporter" novalidate>
+            <div class="apply-grid">
+              <div class="apply-field full">
+                <label class="apply-label">I'd like to contribute as <span class="req">*</span></label>
+                <select name="role" class="apply-select" required>
+                  <option value="">Select&hellip;</option>
+                  <option>Sponsor (corporate or community)</option>
+                  <option>Developer / Engineer</option>
+                  <option>Designer (UX, brand, content)</option>
+                  <option>Mentor / Advisor</option>
+                  <option>Volunteer (general)</option>
+                </select>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Your Name <span class="req">*</span></label>
+                <input type="text" name="contactName" class="apply-input" placeholder="Jane Smith" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Email <span class="req">*</span></label>
+                <input type="email" name="contactEmail" class="apply-input" placeholder="jane@company.com" required>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Company / Organization</label>
+                <input type="text" name="company" class="apply-input" placeholder="(optional)">
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Title / Role</label>
+                <input type="text" name="title" class="apply-input" placeholder="(optional)">
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Sponsorship tier (if sponsor)</label>
+                <select name="tier" class="apply-select">
+                  <option value="">Not applicable</option>
+                  <option>Community &mdash; $2,000</option>
+                  <option>Impact &mdash; $10,000</option>
+                  <option>Visionary &mdash; $25,000</option>
+                  <option>Custom / Let's talk</option>
+                </select>
+              </div>
+              <div class="apply-field">
+                <label class="apply-label">Primary skills (if dev/designer)</label>
+                <select name="skills" class="apply-select">
+                  <option value="">Not applicable</option>
+                  <option>Frontend / Web</option>
+                  <option>Backend / API</option>
+                  <option>Full-stack</option>
+                  <option>Mobile (iOS / Android)</option>
+                  <option>AI / ML</option>
+                  <option>Design (UX/UI, brand)</option>
+                  <option>Data / Analytics</option>
+                  <option>Product / PM</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="apply-field full">
+                <label class="apply-label">Anything else we should know?</label>
+                <textarea name="notes" class="apply-textarea" rows="3" placeholder="Availability, interests, team size, specific nonprofit you want to help&hellip;"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="apply-submit">Submit Application <span>&rarr;</span></button>
+            <div class="apply-fine">We'll confirm your role and share next steps within a few days.</div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -1271,13 +1495,130 @@ html.ps-active { scroll-behavior: smooth; }
           }
         });
       }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-      root.querySelectorAll('.step, .track-card, .tier-card, .register-card, .funding-barometer').forEach(function(el) {
+      root.querySelectorAll('.step, .track-card, .tier-card, .register-card, .funding-barometer, .apply-wrap').forEach(function(el) {
         el.style.opacity = '0';
         el.style.transform = 'translateY(24px)';
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         fadeObserver.observe(el);
       });
     }
+
+    // ═══ APPLY FORM TABS + GOOGLE FORM SUBMIT ═══
+    // Google Form config — set GFORM_ID to the form's /e/ ID (from its public /formResponse URL)
+    // and map each field to the matching entry.NNNNN number from that form.
+    var GFORM_ID = 'REPLACE_WITH_GOOGLE_FORM_E_ID'; // e.g. '1FAIpQLSdXXXXXXXXXXXXXXXXXXXX'
+    var ENTRY_MAP = {
+      nonprofit: {
+        orgName:       'entry.PLACEHOLDER_NP_ORG_NAME',
+        orgWebsite:    'entry.PLACEHOLDER_NP_WEBSITE',
+        contactName:   'entry.PLACEHOLDER_NP_CONTACT_NAME',
+        contactRole:   'entry.PLACEHOLDER_NP_CONTACT_ROLE',
+        contactEmail:  'entry.PLACEHOLDER_NP_CONTACT_EMAIL',
+        contactPhone:  'entry.PLACEHOLDER_NP_CONTACT_PHONE',
+        missionArea:   'entry.PLACEHOLDER_NP_MISSION_AREA',
+        projectTrack:  'entry.PLACEHOLDER_NP_PROJECT_TRACK',
+        projectBrief:  'entry.PLACEHOLDER_NP_PROJECT_BRIEF'
+      },
+      supporter: {
+        role:          'entry.PLACEHOLDER_SP_ROLE',
+        contactName:   'entry.PLACEHOLDER_SP_NAME',
+        contactEmail:  'entry.PLACEHOLDER_SP_EMAIL',
+        company:       'entry.PLACEHOLDER_SP_COMPANY',
+        title:         'entry.PLACEHOLDER_SP_TITLE',
+        tier:          'entry.PLACEHOLDER_SP_TIER',
+        skills:        'entry.PLACEHOLDER_SP_SKILLS',
+        notes:         'entry.PLACEHOLDER_SP_NOTES'
+      }
+    };
+
+    // Tab switching
+    var tabs = root.querySelectorAll('.apply-tab');
+    var panels = root.querySelectorAll('.apply-panel');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.getAttribute('data-panel');
+        tabs.forEach(function(t) { t.classList.toggle('active', t === tab); });
+        panels.forEach(function(p) { p.classList.toggle('active', p.id === target); });
+      });
+    });
+
+    // Form submit handler
+    function submitApplyForm(e) {
+      e.preventDefault();
+      var form = e.target;
+      var type = form.getAttribute('data-type');
+      var btn = form.querySelector('.apply-submit');
+      var originalBtn = btn.innerHTML;
+
+      // Basic required-field check
+      var missing = false;
+      form.querySelectorAll('[required]').forEach(function(el) {
+        if (!el.value || !el.value.trim()) {
+          el.style.borderColor = '#c13535';
+          missing = true;
+        } else {
+          el.style.borderColor = '';
+        }
+      });
+      if (missing) {
+        btn.classList.add('err');
+        btn.innerHTML = 'Please fill required fields';
+        setTimeout(function() {
+          btn.classList.remove('err');
+          btn.innerHTML = originalBtn;
+        }, 2500);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = 'Sending&hellip;';
+
+      var fd = new FormData();
+      var map = ENTRY_MAP[type] || {};
+      Object.keys(map).forEach(function(name) {
+        var entryId = map[name];
+        if (!entryId || entryId.indexOf('PLACEHOLDER') !== -1) return;
+        var el = form.querySelector('[name="' + name + '"]');
+        if (el) fd.append(entryId, el.value || '');
+      });
+
+      if (!GFORM_ID || GFORM_ID.indexOf('REPLACE') !== -1) {
+        // Not yet wired — simulate success (for visual testing) and log payload
+        console.warn('[ps-apply] Google Form not yet wired. Payload:', Object.fromEntries(fd));
+        btn.classList.add('sent');
+        btn.innerHTML = 'Received ✓ (form pending wire-up)';
+        setTimeout(function() {
+          btn.disabled = false;
+          btn.classList.remove('sent');
+          btn.innerHTML = originalBtn;
+        }, 3500);
+        return;
+      }
+
+      var url = 'https://docs.google.com/forms/u/0/d/e/' + GFORM_ID + '/formResponse';
+      fetch(url, { method: 'POST', mode: 'no-cors', body: fd }).then(function() {
+        btn.classList.add('sent');
+        btn.innerHTML = 'Application sent ✓';
+        form.reset();
+        setTimeout(function() {
+          btn.disabled = false;
+          btn.classList.remove('sent');
+          btn.innerHTML = originalBtn;
+        }, 3500);
+      }).catch(function() {
+        btn.classList.add('err');
+        btn.innerHTML = 'Error — try again';
+        btn.disabled = false;
+        setTimeout(function() {
+          btn.classList.remove('err');
+          btn.innerHTML = originalBtn;
+        }, 3500);
+      });
+    }
+
+    root.querySelectorAll('.ps-apply-form').forEach(function(f) {
+      f.addEventListener('submit', submitApplyForm);
+    });
   }
 
   if (document.readyState === 'loading') {
