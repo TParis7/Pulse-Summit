@@ -108,33 +108,49 @@ html.ps-active { scroll-behavior: smooth; }
   transition: all 0.3s;
 }
 #ps-root .nav.scrolled { background: rgba(15,29,71,0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.2); }
+/* Match homepage .p3-nav: padding 16px 40px, height driven by content (CTA 50 + 16+16 = 82). */
 #ps-root .nav-inner {
   max-width: 1200px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
   padding: 16px 40px !important;
-  min-height: 68px !important;
+  min-height: 0 !important;
   height: auto !important;
 }
 /* Matches homepage .p3-nav-logo img (rendered 116×36, from P3%20Logo.svg). */
-#ps-root .nav-logo { height: 36px !important; max-height: 36px !important; width: auto; filter: brightness(0) invert(1); object-fit: contain; }
-/* Matches homepage .p3-nav-links: gap 32px, Inter 14px/500, color rgba(255,255,255,0.85). */
-#ps-root .nav-links { display: flex; align-items: center; gap: 32px !important; }
+#ps-root .nav-logo { height: 36px !important; max-height: 36px !important; width: auto; filter: brightness(0) invert(1); object-fit: contain; display: block; }
+/* Matches homepage .p3-nav-links: display flex, gap 32px, line-height 30px. */
+#ps-root .nav-links { display: flex !important; align-items: center !important; gap: 32px !important; }
+/* Matches homepage .p3-nav-links a: Inter 14px/500, color rgba(255,255,255,0.85), line-height 30px, display block, padding 0, letter-spacing normal, text-transform none. */
 #ps-root .nav-links a {
+  display: block !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 14px !important; font-weight: 500 !important;
+  line-height: 30px !important;
   color: rgba(255,255,255,0.85) !important;
-  letter-spacing: normal !important; transition: color 0.2s;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  padding: 0 !important;
+  transition: color 0.2s;
 }
 #ps-root .nav-links a:hover { color: #fff !important; }
-/* Matches homepage .p3-nav-cta: pill (50px radius), 10px 24px, 14px/600, ~50px tall. */
-#ps-root .nav-cta {
-  background: var(--ps-green) !important; color: #fff !important;
-  padding: 10px 24px !important; border-radius: 50px !important;
+/* Matches homepage .p3-nav-cta exactly: display flex, padding 10px 24px, border-radius 50px, Inter 14px/600, line-height 30px, color #fff, height 50px (10+30+10). Compound selector beats #ps-root .nav-links a (specificity 0,1,2,0 vs 0,1,1,1). */
+#ps-root .nav .nav-cta,
+#ps-root .nav-links a.nav-cta {
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  background: var(--ps-green) !important;
+  color: #fff !important;
+  padding: 10px 24px !important;
+  border-radius: 50px !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 14px !important; font-weight: 600 !important;
+  line-height: 30px !important;
+  letter-spacing: normal !important;
   text-transform: none !important;
-  transition: all 0.2s; box-shadow: 0 2px 12px rgba(22,163,74,0.3);
+  transition: all 0.2s;
+  box-shadow: 0 2px 12px rgba(22,163,74,0.3);
 }
-#ps-root .nav-cta:hover { background: var(--ps-green-dark) !important; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(22,163,74,0.4); }
+#ps-root .nav .nav-cta:hover,
+#ps-root .nav-links a.nav-cta:hover { background: var(--ps-green-dark) !important; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(22,163,74,0.4); }
 #ps-root .mobile-toggle {
   display: none; background: none; border: none; cursor: pointer;
   width: 32px; height: 32px; position: relative; z-index: 10;
@@ -1133,10 +1149,6 @@ html.ps-active { scroll-behavior: smooth; }
         </div>
         <h3>Nonprofits Apply</h3>
         <p>Submit your organization and project brief. Tell us what digital challenge is holding your mission back &mdash; whether it's a website, donor management, data security, or something else entirely.</p>
-        <div class="step-tag">
-          <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/></svg>
-          Applications open
-        </div>
       </div>
       <div class="step">
         <div class="step-icon" style="background:linear-gradient(135deg, var(--ps-green), var(--ps-green-dark)); box-shadow: 0 4px 14px rgba(22,163,74,0.2);">
@@ -1144,7 +1156,6 @@ html.ps-active { scroll-behavior: smooth; }
         </div>
         <h3>Teams Build</h3>
         <p>Volunteer developers, designers, and data scientists form teams, select a nonprofit challenge, and build a working solution over the weekend. Mentors from sponsors are available to guide teams.</p>
-        <div class="step-tag">12-hour sprint</div>
       </div>
       <div class="step">
         <div class="step-icon" style="background:linear-gradient(135deg, #7C3AED, #A855F7); box-shadow: 0 4px 14px rgba(124,58,237,0.2);">
@@ -1152,7 +1163,6 @@ html.ps-active { scroll-behavior: smooth; }
         </div>
         <h3>Solutions Launch</h3>
         <p>Teams demo their builds to a panel of judges. The winning team takes home the $3,000 grand prize &mdash; and every nonprofit walks away with a real, deployable solution.</p>
-        <div class="step-tag">$3K prize</div>
       </div>
     </div>
   </div>
@@ -1207,46 +1217,6 @@ html.ps-active { scroll-behavior: smooth; }
         <h3>Marketing Automation</h3>
         <p>Email campaigns, lead nurturing flows, event registration systems, and automated outreach sequences.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ COMMUNITY CAROUSEL ═══ -->
-<section class="community" id="ps-community">
-  <div class="section-inner">
-    <div class="section-label">Community Impact</div>
-    <div class="section-title">Built on Real Relationships</div>
-    <p class="section-subtitle">From transformative mentorships and partnerships to improve national student outcomes &mdash; P3 brings people together to change lives.</p>
-  </div>
-  <div class="carousel-wrap">
-    <div class="carousel-fade-left"></div>
-    <div class="carousel-fade-right"></div>
-    <div class="carousel-track">
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-1.jpg" alt="P3 scholarship award ceremony" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-2.jpg" alt="P3 Gala 2025 gathering" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-3.jpg" alt="P3 community event" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-4.jpg" alt="P3 mentorship in action" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-5.jpg" alt="P3 community gathering" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-6.jpg" alt="P3 impact event" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-7.jpg" alt="P3 community impact" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-8.jpg" alt="P3 event gathering" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-9.jpg" alt="P3 Gala celebration" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-10.jpg" alt="P3 community event" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-11.jpg" alt="P3 impact story" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-12.jpg" alt="P3 community" loading="lazy"></div>
-      <!-- Duplicate set for seamless infinite scroll -->
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-1.jpg" alt="P3 scholarship award ceremony" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-2.jpg" alt="P3 Gala 2025 gathering" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-3.jpg" alt="P3 community event" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-4.jpg" alt="P3 mentorship in action" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-5.jpg" alt="P3 community gathering" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-6.jpg" alt="P3 impact event" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-7.jpg" alt="P3 community impact" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-8.jpg" alt="P3 event gathering" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-9.jpg" alt="P3 Gala celebration" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-10.jpg" alt="P3 community event" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-11.jpg" alt="P3 impact story" loading="lazy"></div>
-      <div class="carousel-item"><img src="${IMG_BASE}carousel-12.jpg" alt="P3 community" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -1506,7 +1476,7 @@ html.ps-active { scroll-behavior: smooth; }
       </div>
       <div class="tier-card">
         <div class="tier-badge gold">
-          <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 010-5C7 4 9 7 12 7s5-3 7.5-3a2.5 2.5 0 010 5H18"/><path d="M18 9v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9"/><path d="M12 7v14"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M6 4h12v6a6 6 0 01-12 0V4z"/><path d="M10 17h4"/><path d="M12 15v2"/><path d="M8 21h8"/><path d="M9 21v-2a3 3 0 016 0v2"/></svg>
         </div>
         <div class="tier-name">Visionary</div>
         <div class="tier-price"><span>$</span>25K</div>
@@ -1521,6 +1491,46 @@ html.ps-active { scroll-behavior: smooth; }
         </ul>
         <a href="#ps-register" class="btn-tier">Become a Sponsor</a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMMUNITY CAROUSEL ═══ -->
+<section class="community" id="ps-community">
+  <div class="section-inner">
+    <div class="section-label">Community Impact</div>
+    <div class="section-title">Built on Real Relationships</div>
+    <p class="section-subtitle">From transformative mentorships and partnerships to improve national student outcomes &mdash; P3 brings people together to change lives.</p>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-fade-left"></div>
+    <div class="carousel-fade-right"></div>
+    <div class="carousel-track">
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-1.jpg" alt="P3 scholarship award ceremony" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-2.jpg" alt="P3 Gala 2025 gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-3.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-4.jpg" alt="P3 mentorship in action" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-5.jpg" alt="P3 community gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-6.jpg" alt="P3 impact event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-7.jpg" alt="P3 community impact" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-8.jpg" alt="P3 event gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-9.jpg" alt="P3 Gala celebration" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-10.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-11.jpg" alt="P3 impact story" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-12.jpg" alt="P3 community" loading="lazy"></div>
+      <!-- Duplicate set for seamless infinite scroll -->
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-1.jpg" alt="P3 scholarship award ceremony" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-2.jpg" alt="P3 Gala 2025 gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-3.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-4.jpg" alt="P3 mentorship in action" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-5.jpg" alt="P3 community gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-6.jpg" alt="P3 impact event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-7.jpg" alt="P3 community impact" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-8.jpg" alt="P3 event gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-9.jpg" alt="P3 Gala celebration" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-10.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-11.jpg" alt="P3 impact story" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-12.jpg" alt="P3 community" loading="lazy"></div>
     </div>
   </div>
 </section>
