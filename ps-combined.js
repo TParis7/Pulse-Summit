@@ -874,14 +874,19 @@ html.ps-active { scroll-behavior: smooth; }
   /* Matches homepage mobile nav: padding: 16px, height: 64px, logo max-height: 36px. */
   #ps-root .nav-inner { padding: 16px !important; min-height: 64px !important; height: auto !important; }
   #ps-root .nav-logo { height: 36px !important; max-height: 36px !important; }
+  /* Mobile nav-links: hidden by default, revealed when .open. !important overrides are REQUIRED here
+     because the desktop rule above uses display:flex !important with align-items/gap !important, and
+     !important in a wider media query can beat !important in a narrower one when specificity is equal
+     and the wider rule appears later — safest to mirror the flags. */
   #ps-root .nav-links {
-    display: none; flex-direction: column; gap: 0;
+    display: none !important; flex-direction: column !important; gap: 0 !important;
+    align-items: stretch !important;
     position: absolute; top: 100%; left: 0; right: 0;
     background: rgba(15,29,71,0.98); backdrop-filter: blur(20px);
     padding: 12px 24px 22px; border-bottom: 1px solid rgba(255,255,255,0.06);
     box-shadow: 0 8px 30px rgba(0,0,0,0.25);
   }
-  #ps-root .nav-links.open { display: flex; }
+  #ps-root .nav-links.open { display: flex !important; }
   #ps-root .nav-links a { padding: 15px 2px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 15.5px; letter-spacing: 0.2px; }
   #ps-root .nav-links a:last-child { border-bottom: none; }
   /* Register CTA inside hamburger drawer — extra padding + breathing room so it reads as a primary action. */
