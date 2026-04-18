@@ -1,0 +1,1238 @@
+(function() {
+  /* ══════════════════════════════════════════════════════════════
+     ps-combined.js v1.0.0 — Pulse Summit page injection.
+     Strategy: hide Webflow native chrome (this page ships its own
+     dark nav + footer), then inject the full Pulse Summit HTML/CSS
+     into a scoped #ps-root. All CSS scoped with --ps- prefix vars.
+     Source HTML: tparis7/Pulse-Summit/index.html
+     Mockup:      https://tparis7.github.io/Pulse-Summit/
+     Dates:       October 2–3, 2026 (updated from original Sept 17–18)
+     Barometer:   $15K minimum funding target inside Invest in Impact
+     ══════════════════════════════════════════════════════════════ */
+
+  // Guard against double execution
+  if (document.getElementById('ps-root')) return;
+
+  // ═══ 0. CANCEL WEBFLOW IX2 BODY ANIMATION ═══
+  function cancelBodyAnimations() {
+    if (document.body && document.body.getAnimations) {
+      document.body.getAnimations().forEach(function(a) { a.cancel(); });
+    }
+    if (document.body) document.body.style.setProperty('opacity', '1', 'important');
+  }
+  cancelBodyAnimations();
+  document.addEventListener('DOMContentLoaded', cancelBodyAnimations);
+  window.addEventListener('load', cancelBodyAnimations);
+  setTimeout(cancelBodyAnimations, 100);
+  setTimeout(cancelBodyAnimations, 500);
+  setTimeout(cancelBodyAnimations, 1500);
+
+  // ═══ 1. ASSET URLS ═══
+  // P3 logo hosted on Webflow CDN (same asset the mentorship guide uses) so it loads
+  // instantly even before the GitHub repo is synced.
+  var LOGO = 'https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7/69b04a49d86c8d9ea145304a_p3-logo-horizontal.png';
+  // Hero looping video background (re-uses the homepage hero video)
+  var HERO_VIDEO = 'https://cdn.prod.website-files.com/69b02f65f0068e9fb16f09f7%2F69b04a6712d5fdbe9b4e51f8_p3-hero-bg_mp4.mp4';
+  // Carousel + background photos live in the tparis7/Pulse-Summit GitHub repo
+  var IMG_BASE = 'https://tparis7.github.io/Pulse-Summit/images/';
+
+  // Ensure Inter + Space Grotesk are loaded (they may already be loaded by other pages)
+  (function ensureFonts() {
+    if (document.querySelector('link[data-ps-fonts]')) return;
+    var pc1 = document.createElement('link');
+    pc1.rel = 'preconnect'; pc1.href = 'https://fonts.googleapis.com';
+    pc1.setAttribute('data-ps-fonts', '1');
+    document.head.appendChild(pc1);
+    var pc2 = document.createElement('link');
+    pc2.rel = 'preconnect'; pc2.href = 'https://fonts.gstatic.com';
+    pc2.crossOrigin = 'anonymous';
+    pc2.setAttribute('data-ps-fonts', '1');
+    document.head.appendChild(pc2);
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap';
+    l.setAttribute('data-ps-fonts', '1');
+    document.head.appendChild(l);
+  })();
+
+  // ═══ 2. INJECT CSS — scoped to #ps-root with --ps- prefix ═══
+  var style = document.createElement('style');
+  style.setAttribute('data-ps-css', '1');
+  style.innerHTML = `
+/* ─── Root vars (scoped) ─── */
+#ps-root {
+  --ps-blue: #1D4ED8;
+  --ps-blue-dark: #1E3A8A;
+  --ps-blue-deep: #0F1D47;
+  --ps-blue-light: #3B82F6;
+  --ps-blue-bright: #60A5FA;
+  --ps-green: #16A34A;
+  --ps-green-dark: #15803D;
+  --ps-green-light: #22C55E;
+  --ps-green-pale: #DCFCE7;
+  --ps-white: #FFFFFF;
+  --ps-off-white: #F8FAFC;
+  --ps-cool-gray: #F1F5F9;
+  --ps-slate: #64748B;
+  --ps-slate-dark: #334155;
+  --ps-text-dark: #0F172A;
+  --ps-text-mid: #475569;
+  --ps-text-light: #94A3B8;
+  --ps-glass: rgba(255,255,255,0.06);
+  --ps-glass-border: rgba(255,255,255,0.1);
+}
+
+/* ─── Hide Webflow native chrome while Pulse Summit is active ─── */
+body.ps-active { background: #fff; margin: 0; padding: 0; opacity: 1 !important; overflow-x: hidden; }
+body.ps-active > *:not(#ps-root):not(script):not(style):not(link):not(noscript):not([data-ps-keep]) { display: none !important; }
+html.ps-active { scroll-behavior: smooth; }
+
+/* ─── Universal reset inside #ps-root ─── */
+#ps-root *, #ps-root *::before, #ps-root *::after { box-sizing: border-box; margin: 0; padding: 0; }
+#ps-root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--ps-text-dark); background: var(--ps-white);
+  line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+#ps-root h1, #ps-root h2, #ps-root h3, #ps-root h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.1; }
+#ps-root a { color: inherit; text-decoration: none; }
+#ps-root img { max-width: 100%; display: block; }
+#ps-root button { font-family: inherit; }
+#ps-root ul { list-style: none; }
+
+/* ═══════════ NAV ═══════════ */
+#ps-root .nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,29,71,0.85); backdrop-filter: blur(20px) saturate(1.8);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.3s;
+}
+#ps-root .nav.scrolled { background: rgba(15,29,71,0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.2); }
+#ps-root .nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+}
+#ps-root .nav-logo { height: 38px; width: auto; filter: brightness(0) invert(1); }
+#ps-root .nav-links { display: flex; align-items: center; gap: 28px; }
+#ps-root .nav-links a {
+  font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.7);
+  letter-spacing: 0.3px; transition: color 0.2s;
+}
+#ps-root .nav-links a:hover { color: #fff; }
+#ps-root .nav-cta {
+  background: var(--ps-green) !important; color: #fff !important;
+  padding: 10px 22px; border-radius: 8px; font-weight: 600;
+  transition: all 0.2s; box-shadow: 0 2px 12px rgba(22,163,74,0.3);
+}
+#ps-root .nav-cta:hover { background: var(--ps-green-dark) !important; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(22,163,74,0.4); }
+#ps-root .mobile-toggle {
+  display: none; background: none; border: none; cursor: pointer;
+  width: 32px; height: 32px; position: relative; z-index: 10;
+}
+#ps-root .mobile-toggle span {
+  display: block; width: 22px; height: 2px; background: #fff;
+  position: absolute; left: 5px; transition: all 0.3s; border-radius: 2px;
+}
+#ps-root .mobile-toggle span:nth-child(1) { top: 9px; }
+#ps-root .mobile-toggle span:nth-child(2) { top: 15px; }
+#ps-root .mobile-toggle span:nth-child(3) { top: 21px; }
+#ps-root .mobile-toggle.open span:nth-child(1) { top: 15px; transform: rotate(45deg); }
+#ps-root .mobile-toggle.open span:nth-child(2) { opacity: 0; }
+#ps-root .mobile-toggle.open span:nth-child(3) { top: 15px; transform: rotate(-45deg); }
+
+/* ═══════════ HERO ═══════════ */
+#ps-root .hero {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; padding: 100px 32px 60px;
+  background: var(--ps-blue-deep);
+}
+#ps-root .hero-video { position: absolute; inset: 0; z-index: 0; }
+#ps-root .hero-video video {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0.33; filter: saturate(0.3);
+}
+#ps-root .hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(170deg, rgba(15,29,71,0.82) 0%, rgba(29,78,216,0.62) 50%, rgba(22,163,74,0.35) 100%);
+}
+#ps-root .hero-mesh {
+  position: absolute; inset: 0; z-index: 2; opacity: 0.06;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.8) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.5) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+#ps-root .hero-content { position: relative; z-index: 3; text-align: center; max-width: 880px; }
+#ps-root .hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ps-glass); border: 1px solid var(--ps-glass-border);
+  border-radius: 100px; padding: 8px 22px; margin-bottom: 28px;
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px); letter-spacing: 0.5px;
+}
+#ps-root .hero-badge .pulse {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ps-green-light); position: relative;
+}
+#ps-root .hero-badge .pulse::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  background: var(--ps-green-light); opacity: 0;
+  animation: ps-ping 2s cubic-bezier(0,0,0.2,1) infinite;
+}
+@keyframes ps-ping { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
+
+#ps-root .hero h1 {
+  font-size: clamp(44px, 7vw, 86px); font-weight: 800;
+  color: #fff; letter-spacing: -2.5px; margin-bottom: 4px;
+}
+#ps-root .hero h1 .line2 {
+  display: block; font-size: 0.5em; letter-spacing: 0;
+  background: linear-gradient(90deg, var(--ps-blue-bright), var(--ps-green-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-top: 4px;
+}
+#ps-root .hero-sub {
+  font-size: clamp(16px, 2.2vw, 20px); color: rgba(255,255,255,0.65);
+  max-width: 580px; margin: 20px auto 12px; font-weight: 400; line-height: 1.7;
+}
+#ps-root .hero-meta {
+  display: flex; align-items: center; justify-content: center;
+  gap: 28px; flex-wrap: wrap; margin-bottom: 36px;
+  font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 500;
+}
+#ps-root .hero-meta span { display: flex; align-items: center; gap: 7px; }
+#ps-root .hero-meta svg { width: 16px; height: 16px; stroke: var(--ps-green-light); fill: none; stroke-width: 2.5; }
+#ps-root .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+#ps-root .btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ps-green); color: #fff;
+  padding: 15px 32px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;
+  border: none; cursor: pointer; letter-spacing: 0.3px;
+  transition: all 0.25s; box-shadow: 0 4px 20px rgba(22,163,74,0.35);
+}
+#ps-root .btn-primary:hover { background: var(--ps-green-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(22,163,74,0.45); }
+#ps-root .btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ps-glass); color: #fff;
+  padding: 15px 32px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;
+  border: 1px solid var(--ps-glass-border); cursor: pointer;
+  transition: all 0.25s;
+}
+#ps-root .btn-secondary:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+
+#ps-root .btn-blue {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ps-blue); color: #fff;
+  padding: 15px 32px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;
+  border: none; cursor: pointer;
+  transition: all 0.25s; box-shadow: 0 4px 20px rgba(29,78,216,0.35);
+}
+#ps-root .btn-blue:hover { background: var(--ps-blue-dark); transform: translateY(-2px); }
+
+/* ═══════════ STATS ═══════════ */
+#ps-root .stats-bar { padding: 0 32px; margin-top: -44px; position: relative; z-index: 10; }
+#ps-root .stats-inner {
+  max-width: 960px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+#ps-root .stat-item {
+  text-align: center; padding: 28px 20px;
+  border-right: 1px solid var(--ps-cool-gray);
+}
+#ps-root .stat-item:last-child { border-right: none; }
+#ps-root .stat-number {
+  font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 800;
+  background: linear-gradient(135deg, var(--ps-blue), var(--ps-green));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1;
+}
+#ps-root .stat-label { font-size: 13px; color: var(--ps-text-light); margin-top: 4px; font-weight: 500; letter-spacing: 0.5px; }
+
+/* ═══════════ SECTIONS ═══════════ */
+#ps-root section { padding: 48px 32px; }
+#ps-root .section-inner { max-width: 1100px; margin: 0 auto; }
+#ps-root .section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;
+  color: var(--ps-green); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+#ps-root .section-label::before {
+  content: ''; width: 20px; height: 2px;
+  background: linear-gradient(90deg, var(--ps-blue), var(--ps-green)); border-radius: 2px;
+}
+#ps-root .section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; color: var(--ps-text-dark); }
+#ps-root .section-subtitle { font-size: 16px; color: var(--ps-text-mid); max-width: 560px; line-height: 1.7; }
+
+/* ═══════════ ABOUT ═══════════ */
+#ps-root .about { background: var(--ps-white); position: relative; overflow: hidden; }
+#ps-root .about-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: url('${IMG_BASE}doctors-park.jpg');
+  background-size: cover; background-position: center;
+  opacity: 0.11;
+}
+#ps-root .about .section-inner { position: relative; z-index: 1; }
+#ps-root .about-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+  align-items: center; margin-top: 28px;
+}
+#ps-root .about-visual {
+  background: linear-gradient(135deg, var(--ps-blue-deep) 0%, var(--ps-blue-dark) 100%);
+  border-radius: 16px; padding: 40px; position: relative; overflow: hidden;
+  min-height: 340px; display: flex; align-items: center; justify-content: center;
+}
+#ps-root .about-visual::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(22,163,74,0.15); filter: blur(40px);
+}
+#ps-root .about-visual::after {
+  content: ''; position: absolute; bottom: -30px; left: -30px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(59,130,246,0.2); filter: blur(40px);
+}
+#ps-root .about-visual-inner { position: relative; z-index: 1; text-align: center; }
+#ps-root .about-visual .big-quote {
+  font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700;
+  color: #fff; line-height: 1.35;
+}
+#ps-root .about-visual .big-quote em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--ps-blue-bright), var(--ps-green-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+#ps-root .about-visual .quote-attr { margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.45); }
+#ps-root .about-text p { color: var(--ps-text-mid); font-size: 16px; line-height: 1.8; margin-bottom: 16px; }
+#ps-root .about-text p strong { color: var(--ps-text-dark); font-weight: 600; }
+
+/* ═══════════ HOW IT WORKS ═══════════ */
+#ps-root .how-it-works { background: var(--ps-off-white); }
+#ps-root .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 28px; }
+#ps-root .step {
+  background: #fff; border-radius: 16px; padding: 32px 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+#ps-root .step::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ps-blue), var(--ps-green));
+  opacity: 0; transition: opacity 0.3s;
+}
+#ps-root .step:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.08); }
+#ps-root .step:hover::before { opacity: 1; }
+#ps-root .step-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--ps-blue) 0%, var(--ps-blue-light) 100%);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px; box-shadow: 0 4px 14px rgba(29,78,216,0.2);
+}
+#ps-root .step-icon svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#ps-root .step h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+#ps-root .step p { color: var(--ps-text-mid); font-size: 14.5px; line-height: 1.7; }
+#ps-root .step-tag {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
+  font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--ps-green); background: var(--ps-green-pale); padding: 5px 12px; border-radius: 6px;
+}
+
+/* ═══════════ TRACKS ═══════════ */
+#ps-root .tracks { background: var(--ps-white); }
+#ps-root .track-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+#ps-root .track-card {
+  border: 1px solid var(--ps-cool-gray); border-radius: 14px; padding: 28px 24px;
+  transition: all 0.3s; background: #fff; position: relative; overflow: hidden;
+}
+#ps-root .track-card:hover { border-color: var(--ps-blue-light); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(29,78,216,0.08); }
+#ps-root .track-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+#ps-root .track-icon.blue { background: rgba(29,78,216,0.08); }
+#ps-root .track-icon.green { background: rgba(22,163,74,0.08); }
+#ps-root .track-icon svg { width: 22px; height: 22px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#ps-root .track-icon.blue svg { stroke: var(--ps-blue); }
+#ps-root .track-icon.green svg { stroke: var(--ps-green); }
+#ps-root .track-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+#ps-root .track-card p { font-size: 14px; color: var(--ps-text-light); line-height: 1.65; }
+
+/* ═══════════ COMMUNITY CAROUSEL ═══════════ */
+#ps-root .community { background: var(--ps-off-white); overflow: hidden; padding: 48px 0; }
+#ps-root .community .section-inner { padding: 0 32px; }
+#ps-root .carousel-wrap { margin-top: 28px; position: relative; }
+#ps-root .carousel-track {
+  display: flex; gap: 20px;
+  animation: ps-scroll-carousel 40s linear infinite;
+  width: max-content;
+}
+#ps-root .carousel-track:hover { animation-play-state: paused; }
+#ps-root .carousel-item {
+  flex-shrink: 0; width: 340px; height: 240px;
+  border-radius: 14px; overflow: hidden; position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+#ps-root .carousel-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s;
+}
+#ps-root .carousel-item:hover img { transform: scale(1.05); }
+#ps-root .carousel-item::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(15,29,71,0.3) 0%, transparent 50%);
+  pointer-events: none;
+}
+@keyframes ps-scroll-carousel {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+#ps-root .carousel-fade-left, #ps-root .carousel-fade-right {
+  position: absolute; top: 0; bottom: 0; width: 80px; z-index: 5; pointer-events: none;
+}
+#ps-root .carousel-fade-left { left: 0; background: linear-gradient(to right, var(--ps-off-white), transparent); }
+#ps-root .carousel-fade-right { right: 0; background: linear-gradient(to left, var(--ps-off-white), transparent); }
+
+/* ═══════════ SPONSORS ═══════════ */
+#ps-root .sponsors { background: var(--ps-white); }
+#ps-root .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 28px; }
+#ps-root .tier-card {
+  background: #fff; border-radius: 16px; padding: 36px 28px;
+  text-align: center; border: 2px solid var(--ps-cool-gray);
+  transition: all 0.3s; position: relative;
+}
+#ps-root .tier-card:hover { transform: translateY(-4px); }
+#ps-root .tier-card.featured {
+  border-color: var(--ps-blue);
+  box-shadow: 0 8px 40px rgba(29,78,216,0.1);
+}
+#ps-root .tier-card.featured::before {
+  content: 'MOST POPULAR';
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--ps-blue), var(--ps-green));
+  color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  padding: 5px 16px; border-radius: 100px;
+}
+#ps-root .tier-badge {
+  width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+#ps-root .tier-badge svg { width: 24px; height: 24px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#ps-root .tier-badge.bronze { background: rgba(148,163,184,0.1); }
+#ps-root .tier-badge.bronze svg { stroke: var(--ps-slate); }
+#ps-root .tier-badge.silver { background: rgba(29,78,216,0.08); }
+#ps-root .tier-badge.silver svg { stroke: var(--ps-blue); }
+#ps-root .tier-badge.gold { background: rgba(22,163,74,0.08); }
+#ps-root .tier-badge.gold svg { stroke: var(--ps-green); }
+#ps-root .tier-name {
+  font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px; color: var(--ps-text-light);
+  margin-bottom: 6px;
+}
+#ps-root .tier-price {
+  font-family: 'Space Grotesk', sans-serif; font-size: 44px; font-weight: 800;
+  color: var(--ps-text-dark); line-height: 1;
+}
+#ps-root .tier-price span { font-size: 18px; color: var(--ps-text-light); font-weight: 500; }
+#ps-root .tier-desc { font-size: 14px; color: var(--ps-text-mid); margin: 12px 0 20px; }
+#ps-root .tier-perks { list-style: none; text-align: left; margin-bottom: 28px; }
+#ps-root .tier-perks li {
+  font-size: 14px; color: var(--ps-text-mid); padding: 9px 0;
+  border-bottom: 1px solid var(--ps-cool-gray);
+  display: flex; align-items: flex-start; gap: 10px; line-height: 1.5;
+}
+#ps-root .tier-perks li:last-child { border-bottom: none; }
+#ps-root .tier-perks .check { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--ps-green-pale); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+#ps-root .tier-perks .check svg { width: 11px; height: 11px; stroke: var(--ps-green); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+#ps-root .btn-tier {
+  display: block; width: 100%; padding: 13px; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px;
+  border: 2px solid var(--ps-blue); color: var(--ps-blue);
+  background: transparent; cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+}
+#ps-root .btn-tier:hover { background: var(--ps-blue); color: #fff; }
+#ps-root .tier-card.featured .btn-tier {
+  background: linear-gradient(135deg, var(--ps-blue), var(--ps-blue-light));
+  color: #fff; border-color: transparent;
+}
+#ps-root .tier-card.featured .btn-tier:hover { background: linear-gradient(135deg, var(--ps-blue-dark), var(--ps-blue)); }
+
+/* ═══════════ FUNDING BAROMETER ═══════════ */
+#ps-root .funding-barometer {
+  background: linear-gradient(135deg, #ffffff 0%, var(--ps-off-white) 100%);
+  border: 2px solid var(--ps-cool-gray);
+  border-radius: 16px;
+  padding: 32px 36px 28px;
+  margin: 28px auto 32px;
+  max-width: 820px;
+  box-shadow: 0 8px 40px rgba(29,78,216,0.06);
+  position: relative; overflow: hidden;
+}
+#ps-root .funding-barometer::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--ps-blue), var(--ps-green));
+}
+#ps-root .barometer-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--ps-green); margin-bottom: 12px;
+}
+#ps-root .barometer-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ps-green-light); position: relative; flex-shrink: 0;
+}
+#ps-root .barometer-dot::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  background: var(--ps-green-light); opacity: 0;
+  animation: ps-ping 2s cubic-bezier(0,0,0.2,1) infinite;
+}
+#ps-root .funding-barometer h3 {
+  font-size: 24px; font-weight: 800; color: var(--ps-text-dark);
+  margin-bottom: 12px; letter-spacing: -0.5px; line-height: 1.2;
+}
+#ps-root .funding-barometer > p {
+  font-size: 15px; color: var(--ps-text-mid); line-height: 1.7;
+  margin-bottom: 24px;
+}
+#ps-root .funding-barometer > p strong { color: var(--ps-text-dark); font-weight: 700; }
+#ps-root .barometer-track {
+  position: relative;
+  height: 16px; border-radius: 100px;
+  background: var(--ps-cool-gray);
+  overflow: hidden; margin-bottom: 12px;
+}
+#ps-root .barometer-fill {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--ps-blue) 0%, var(--ps-blue-light) 60%, var(--ps-green) 100%);
+  border-radius: 100px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(29,78,216,0.25);
+}
+#ps-root .barometer-labels {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 13.5px; color: var(--ps-text-light);
+}
+#ps-root .barometer-labels .raised strong {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--ps-green); font-size: 20px; font-weight: 800;
+  margin-right: 4px;
+}
+#ps-root .barometer-labels .goal strong {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--ps-text-dark); font-weight: 800;
+}
+#ps-root .barometer-note {
+  margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid var(--ps-cool-gray);
+  font-size: 13px; color: var(--ps-text-mid); line-height: 1.65;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+#ps-root .barometer-note svg {
+  flex-shrink: 0; width: 18px; height: 18px;
+  stroke: var(--ps-blue); fill: none; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+  margin-top: 1px;
+}
+
+/* ═══════════ REGISTER ═══════════ */
+#ps-root .register {
+  background: linear-gradient(160deg, var(--ps-blue-deep) 0%, var(--ps-blue-dark) 50%, #0D3320 100%);
+  position: relative; overflow: hidden;
+}
+#ps-root .register::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(22,163,74,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.1) 0%, transparent 50%);
+}
+#ps-root .register .section-inner { position: relative; z-index: 1; }
+#ps-root .register .section-label { color: var(--ps-green-light); }
+#ps-root .register .section-label::before { background: linear-gradient(90deg, var(--ps-green-light), var(--ps-blue-bright)); }
+#ps-root .register .section-title { color: #fff; }
+#ps-root .register .section-subtitle { color: rgba(255,255,255,0.55); }
+#ps-root .register-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 28px; }
+#ps-root .register-card {
+  background: var(--ps-glass); border: 1px solid var(--ps-glass-border);
+  border-radius: 16px; padding: 40px 32px; text-align: center;
+  backdrop-filter: blur(12px); transition: all 0.3s;
+}
+#ps-root .register-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+#ps-root .register-card .card-icon {
+  width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center;
+}
+#ps-root .register-card:first-child .card-icon { background: rgba(22,163,74,0.15); }
+#ps-root .register-card:last-child .card-icon { background: rgba(59,130,246,0.15); }
+#ps-root .register-card .card-icon svg { width: 26px; height: 26px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#ps-root .register-card:first-child .card-icon svg { stroke: var(--ps-green-light); }
+#ps-root .register-card:last-child .card-icon svg { stroke: var(--ps-blue-bright); }
+#ps-root .register-card h3 { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+#ps-root .register-card p { color: rgba(255,255,255,0.5); font-size: 14.5px; line-height: 1.7; margin-bottom: 24px; }
+#ps-root .register-card .btn-primary { width: 100%; justify-content: center; }
+#ps-root .register-card:last-child .btn-primary { background: var(--ps-blue); box-shadow: 0 4px 20px rgba(29,78,216,0.35); }
+#ps-root .register-card:last-child .btn-primary:hover { background: var(--ps-blue-dark); }
+
+/* ═══════════ DONATE ═══════════ */
+#ps-root .donate {
+  text-align: center; padding: 64px 32px;
+  position: relative; overflow: hidden;
+  background: var(--ps-blue-deep);
+}
+#ps-root .donate-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: url('${IMG_BASE}img-7919.jpg');
+  background-size: cover; background-position: center;
+  opacity: 0.18; filter: saturate(0.4);
+}
+#ps-root .donate-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(135deg, rgba(15,29,71,0.88) 0%, rgba(29,78,216,0.7) 50%, rgba(22,163,74,0.5) 100%);
+}
+#ps-root .donate-inner {
+  max-width: 580px; margin: 0 auto; position: relative; z-index: 2;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 40px 36px; backdrop-filter: blur(8px);
+}
+#ps-root .donate-heart {
+  width: 52px; height: 52px; margin: 0 auto 16px; border-radius: 50%;
+  background: rgba(22,163,74,0.2);
+  display: flex; align-items: center; justify-content: center;
+}
+#ps-root .donate-heart svg { width: 24px; height: 24px; fill: var(--ps-green-light); }
+#ps-root .donate h2 { font-size: 28px; font-weight: 800; margin-bottom: 10px; color: #fff; }
+#ps-root .donate p { color: rgba(255,255,255,0.65); font-size: 15px; max-width: 440px; margin: 0 auto 24px; line-height: 1.7; }
+
+/* ═══════════ FOOTER ═══════════ */
+#ps-root .footer { background: var(--ps-blue-deep); color: rgba(255,255,255,0.4); padding: 40px 32px; }
+#ps-root .footer-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+#ps-root .footer-brand { display: flex; align-items: center; gap: 12px; }
+#ps-root .footer-brand img { height: 32px; width: auto; filter: brightness(0) invert(1); opacity: 0.7; }
+#ps-root .footer-links { display: flex; gap: 24px; }
+#ps-root .footer-links a { font-size: 13px; transition: color 0.2s; }
+#ps-root .footer-links a:hover { color: rgba(255,255,255,0.8); }
+#ps-root .footer-copy {
+  font-size: 12px; width: 100%; text-align: center;
+  margin-top: 20px; padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 1024px) {
+  #ps-root .tier-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+  #ps-root .about-grid { grid-template-columns: 1fr; gap: 24px; }
+  #ps-root .about-visual { min-height: 220px; }
+  #ps-root .track-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  #ps-root section { padding: 36px 16px; }
+  #ps-root .nav-inner { padding: 12px 16px; }
+  #ps-root .nav-logo { height: 32px; }
+  #ps-root .nav-links {
+    display: none; flex-direction: column; gap: 0;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: rgba(15,29,71,0.98); backdrop-filter: blur(20px);
+    padding: 8px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  #ps-root .nav-links.open { display: flex; }
+  #ps-root .nav-links a { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 15px; }
+  #ps-root .nav-links a:last-child { border-bottom: none; }
+  #ps-root .nav-cta { text-align: center; margin-top: 4px; display: block; }
+  #ps-root .mobile-toggle { display: block; }
+
+  /* Hero mobile */
+  #ps-root .hero { min-height: auto; padding: 100px 16px 56px; }
+  #ps-root .hero h1 { font-size: 38px; letter-spacing: -1px; }
+  #ps-root .hero h1 .line2 { font-size: 0.55em; }
+  #ps-root .hero-sub { font-size: 15px; margin: 16px auto 8px; }
+  #ps-root .hero-meta { gap: 12px; font-size: 13px; margin-bottom: 28px; }
+  #ps-root .hero-meta span { gap: 5px; }
+  #ps-root .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+  #ps-root .hero-actions .btn-primary,
+  #ps-root .hero-actions .btn-secondary { justify-content: center; padding: 14px 24px; font-size: 14px; }
+  #ps-root .hero-badge { font-size: 12px; padding: 6px 16px; margin-bottom: 20px; }
+
+  /* Stats mobile */
+  #ps-root .stats-bar { padding: 0 16px; margin-top: -36px; }
+  #ps-root .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  #ps-root .stat-item { padding: 20px 12px; }
+  #ps-root .stat-item:nth-child(2) { border-right: none; }
+  #ps-root .stat-number { font-size: 28px; }
+  #ps-root .stat-label { font-size: 11px; }
+
+  /* Section headers mobile */
+  #ps-root .section-title { font-size: 26px; margin-bottom: 10px; }
+  #ps-root .section-subtitle { font-size: 14px; }
+  #ps-root .section-label { font-size: 11px; letter-spacing: 2px; margin-bottom: 8px; }
+
+  /* About mobile */
+  #ps-root .about-grid { grid-template-columns: 1fr; gap: 24px; }
+  #ps-root .about-visual { min-height: 200px; padding: 28px; }
+  #ps-root .about-visual .big-quote { font-size: 22px; }
+  #ps-root .about-text p { font-size: 14.5px; margin-bottom: 12px; }
+
+  /* Steps mobile */
+  #ps-root .steps { grid-template-columns: 1fr; gap: 14px; }
+  #ps-root .step { padding: 24px 20px; }
+  #ps-root .step-icon { width: 44px; height: 44px; margin-bottom: 14px; }
+  #ps-root .step-icon svg { width: 20px; height: 20px; }
+  #ps-root .step h3 { font-size: 18px; }
+  #ps-root .step p { font-size: 14px; }
+
+  /* Tracks mobile */
+  #ps-root .track-grid { grid-template-columns: 1fr; gap: 12px; }
+  #ps-root .track-card { padding: 22px 20px; }
+  #ps-root .track-icon { width: 40px; height: 40px; margin-bottom: 12px; }
+  #ps-root .track-card h3 { font-size: 16px; }
+  #ps-root .track-card p { font-size: 13px; }
+
+  /* Carousel mobile */
+  #ps-root .community { padding: 36px 0; }
+  #ps-root .community .section-inner { padding: 0 16px; }
+  #ps-root .carousel-item { width: 260px; height: 180px; }
+  #ps-root .carousel-fade-left, #ps-root .carousel-fade-right { width: 40px; }
+
+  /* Sponsors mobile */
+  #ps-root .tier-grid { max-width: 100%; }
+  #ps-root .tier-card { padding: 28px 22px; }
+  #ps-root .tier-card.featured::before { font-size: 9px; padding: 4px 12px; top: -11px; }
+  #ps-root .tier-price { font-size: 36px; }
+  #ps-root .tier-perks li { font-size: 13px; padding: 8px 0; }
+
+  /* Barometer mobile */
+  #ps-root .funding-barometer { padding: 24px 20px 22px; border-radius: 14px; margin: 24px auto 26px; }
+  #ps-root .funding-barometer h3 { font-size: 20px; }
+  #ps-root .funding-barometer > p { font-size: 14px; margin-bottom: 20px; }
+  #ps-root .barometer-track { height: 14px; }
+  #ps-root .barometer-labels { font-size: 12.5px; }
+  #ps-root .barometer-labels .raised strong { font-size: 17px; }
+  #ps-root .barometer-note { font-size: 12px; margin-top: 14px; padding-top: 12px; }
+
+  /* Register mobile */
+  #ps-root .register-grid { grid-template-columns: 1fr; gap: 14px; }
+  #ps-root .register-card { padding: 28px 22px; }
+  #ps-root .register-card h3 { font-size: 20px; }
+  #ps-root .register-card p { font-size: 13.5px; margin-bottom: 20px; }
+  #ps-root .register-card .btn-primary { padding: 14px 24px; font-size: 14px; }
+
+  /* Donate mobile */
+  #ps-root .donate { padding: 48px 16px; }
+  #ps-root .donate-inner { padding: 28px 22px; }
+  #ps-root .donate h2 { font-size: 24px; }
+  #ps-root .donate p { font-size: 14px; }
+
+  /* Footer mobile */
+  #ps-root .footer { padding: 32px 16px; }
+  #ps-root .footer-inner { flex-direction: column; text-align: center; gap: 12px; }
+  #ps-root .footer-brand img { height: 28px; }
+  #ps-root .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  #ps-root .footer-links a { font-size: 13px; }
+  #ps-root .footer-copy { font-size: 11px; margin-top: 16px; padding-top: 16px; }
+}
+
+/* Extra small phones */
+@media (max-width: 375px) {
+  #ps-root .hero h1 { font-size: 32px; }
+  #ps-root .hero h1 .line2 { font-size: 0.5em; }
+  #ps-root .hero-sub { font-size: 14px; }
+  #ps-root .stat-number { font-size: 24px; }
+  #ps-root .carousel-item { width: 220px; height: 160px; }
+  #ps-root .section-title { font-size: 22px; }
+  #ps-root .step { padding: 20px 16px; }
+  #ps-root .tier-price { font-size: 32px; }
+  #ps-root .register-card { padding: 24px 18px; }
+  #ps-root .funding-barometer { padding: 22px 18px; }
+  #ps-root .funding-barometer h3 { font-size: 18px; }
+}
+`;
+  document.head.appendChild(style);
+
+  // ═══ 3. ACTIVATE BODY + HTML ═══
+  document.documentElement.classList.add('ps-active');
+  document.body.classList.add('ps-active');
+
+  // ═══ 4. BUILD #ps-root CONTENT ═══
+  var root = document.createElement('div');
+  root.id = 'ps-root';
+  root.innerHTML = `
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="ps-nav">
+  <div class="nav-inner">
+    <a href="https://www.pulseofp3.org" aria-label="Pulse of Perseverance Project">
+      <img src="${LOGO}" alt="The Pulse of Perseverance Project" class="nav-logo">
+    </a>
+    <div class="nav-links" id="ps-navLinks">
+      <a href="#ps-about">About</a>
+      <a href="#ps-how-it-works">How It Works</a>
+      <a href="#ps-tracks">Tracks</a>
+      <a href="#ps-community">Impact</a>
+      <a href="#ps-sponsors">Sponsor</a>
+      <a href="#ps-register" class="nav-cta">Register</a>
+    </div>
+    <button class="mobile-toggle" id="ps-mobileToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-video">
+    <video autoplay muted loop playsinline>
+      <source src="${HERO_VIDEO}" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-mesh"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="pulse"></span> October 2–3, 2026 &middot; Chicago, IL</div>
+    <h1>Pulse Summit<span class="line2">Technology with Heart</span></h1>
+    <p class="hero-sub">A 2-day hackathon where developers and tech companies build real digital solutions for 5 Chicago nonprofits.</p>
+    <div class="hero-meta">
+      <span>
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Oct 2–3, 2026
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Chicago, IL
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        $3K Grand Prize
+      </span>
+    </div>
+    <div class="hero-actions">
+      <a href="#ps-register" class="btn-primary">Register Now <span>&rarr;</span></a>
+      <a href="#ps-sponsors" class="btn-secondary">Become a Sponsor</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ═══ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-number" data-target="2">0</div><div class="stat-label">Days</div></div>
+    <div class="stat-item"><div class="stat-number" data-target="5">0</div><div class="stat-label">Nonprofits Served</div></div>
+    <div class="stat-item"><div class="stat-number" data-prefix="$" data-suffix="K" data-target="3">0</div><div class="stat-label">Grand Prize</div></div>
+    <div class="stat-item"><div class="stat-number" data-target="1">0</div><div class="stat-label">Mission</div></div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<section class="about" id="ps-about">
+  <div class="about-bg"></div>
+  <div class="section-inner">
+    <div class="section-label">About the Summit</div>
+    <div class="section-title">Why Pulse Summit?</div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p><strong>Pulse of Perseverance Project (P3)</strong> is a nonprofit EdTech career accelerator connecting underserved students with mentors through AI-powered smart matching. We've seen firsthand how the right technology can transform a mission.</p>
+        <p>But many nonprofits doing incredible community work in Chicago don't have access to the digital tools they need. <strong>Pulse Summit</strong> changes that — bringing together volunteer developers, designers, and tech companies to build real solutions for real organizations over one powerful weekend.</p>
+        <p>Five nonprofits will submit project briefs ahead of the event. Teams of developers will choose a challenge and build working solutions in just two days. Tech sponsors fund the event, mentor teams, and demonstrate corporate social responsibility in action.</p>
+      </div>
+      <div class="about-visual">
+        <div class="about-visual-inner">
+          <div class="big-quote">&ldquo;Talent is <em>universal</em>.<br>Access is <em>not</em>.&rdquo;</div>
+          <div class="quote-attr">&mdash; The P3 founding principle</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how-it-works" id="ps-how-it-works">
+  <div class="section-inner">
+    <div class="section-label">How It Works</div>
+    <div class="section-title">System Level Change</div>
+    <p class="section-subtitle">Whether you're a nonprofit with a need, a developer with skills to share, or a company that wants to make an impact &mdash; there's a role for you.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3>Nonprofits Apply</h3>
+        <p>Submit your organization and project brief. Tell us what digital challenge is holding your mission back &mdash; whether it's a website, donor management, data security, or something else entirely.</p>
+        <div class="step-tag">
+          <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/></svg>
+          Applications open
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon" style="background:linear-gradient(135deg, var(--ps-green), var(--ps-green-dark)); box-shadow: 0 4px 14px rgba(22,163,74,0.2);">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14.5" y1="4" x2="9.5" y2="20"/></svg>
+        </div>
+        <h3>Teams Build</h3>
+        <p>Volunteer developers, designers, and data scientists form teams, select a nonprofit challenge, and build a working solution over the weekend. Mentors from sponsors are available to guide teams.</p>
+        <div class="step-tag">2-day sprint</div>
+      </div>
+      <div class="step">
+        <div class="step-icon" style="background:linear-gradient(135deg, #7C3AED, #A855F7); box-shadow: 0 4px 14px rgba(124,58,237,0.2);">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3>Solutions Launch</h3>
+        <p>Teams demo their builds to a panel of judges. The winning team takes home the $3,000 grand prize &mdash; and every nonprofit walks away with a real, deployable solution.</p>
+        <div class="step-tag">$3K prize</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJECT TRACKS ═══ -->
+<section class="tracks" id="ps-tracks">
+  <div class="section-inner">
+    <div class="section-label">Project Tracks</div>
+    <div class="section-title">What Teams Will Build</div>
+    <p class="section-subtitle">Nonprofit partners will submit projects from any of these tracks. Specific briefs shared before the event.</p>
+    <div class="track-grid">
+      <div class="track-card">
+        <div class="track-icon blue">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Website Upgrades</h3>
+        <p>Redesigns, accessibility improvements, mobile optimization, and CMS migrations for outdated websites.</p>
+      </div>
+      <div class="track-card">
+        <div class="track-icon green">
+          <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1.17A7 7 0 015.17 19H4a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73A2 2 0 0112 2z"/><circle cx="9" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="14" r="1" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h3>AI Solutions</h3>
+        <p>Chatbots, smart matching tools, automated intake forms, and AI-powered workflows to multiply capacity.</p>
+      </div>
+      <div class="track-card">
+        <div class="track-icon blue">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <h3>Donor Management</h3>
+        <p>CRM setup, donation tracking dashboards, automated receipts, and reporting tools to streamline fundraising.</p>
+      </div>
+      <div class="track-card">
+        <div class="track-icon green">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+        </div>
+        <h3>Data Security</h3>
+        <p>Security audits, encryption, FERPA/HIPAA compliance tooling, and incident response planning.</p>
+      </div>
+      <div class="track-card">
+        <div class="track-icon blue">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+        </div>
+        <h3>Social Media &amp; Marketing</h3>
+        <p>Content calendars, brand kits, social media strategy, analytics dashboards, and storytelling frameworks.</p>
+      </div>
+      <div class="track-card">
+        <div class="track-icon green">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Marketing Automation</h3>
+        <p>Email campaigns, lead nurturing flows, event registration systems, and automated outreach sequences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMMUNITY CAROUSEL ═══ -->
+<section class="community" id="ps-community">
+  <div class="section-inner">
+    <div class="section-label">Community Impact</div>
+    <div class="section-title">Built on Real Relationships</div>
+    <p class="section-subtitle">From transformative mentorships and partnerships to improve national student outcomes &mdash; P3 brings people together to change lives.</p>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-fade-left"></div>
+    <div class="carousel-fade-right"></div>
+    <div class="carousel-track">
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-1.jpg" alt="P3 scholarship award ceremony" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-2.jpg" alt="P3 Gala 2025 gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-3.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-4.jpg" alt="P3 mentorship in action" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-5.jpg" alt="P3 community gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-6.jpg" alt="P3 impact event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-7.jpg" alt="P3 community impact" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-8.jpg" alt="P3 event gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-9.jpg" alt="P3 Gala celebration" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-10.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-11.jpg" alt="P3 impact story" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-12.jpg" alt="P3 community" loading="lazy"></div>
+      <!-- Duplicate set for seamless infinite scroll -->
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-1.jpg" alt="P3 scholarship award ceremony" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-2.jpg" alt="P3 Gala 2025 gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-3.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-4.jpg" alt="P3 mentorship in action" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-5.jpg" alt="P3 community gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-6.jpg" alt="P3 impact event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-7.jpg" alt="P3 community impact" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-8.jpg" alt="P3 event gathering" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-9.jpg" alt="P3 Gala celebration" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-10.jpg" alt="P3 community event" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-11.jpg" alt="P3 impact story" loading="lazy"></div>
+      <div class="carousel-item"><img src="${IMG_BASE}carousel-12.jpg" alt="P3 community" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REGISTER ═══ -->
+<section class="register" id="ps-register">
+  <div class="section-inner">
+    <div class="section-label">Get Involved</div>
+    <div class="section-title">Join the Summit</div>
+    <div class="register-grid">
+      <div class="register-card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>I'm a Nonprofit</h3>
+        <p>Submit your organization and project brief. We'll match you with a team of developers ready to build what you need.</p>
+        <a href="https://forms.gle/NONPROFIT_PLACEHOLDER" target="_blank" class="btn-primary">Apply as a Nonprofit <span>&rarr;</span></a>
+      </div>
+      <div class="register-card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14.5" y1="4" x2="9.5" y2="20"/></svg>
+        </div>
+        <h3>I'm a Developer or Sponsor</h3>
+        <p>Volunteer your skills for the weekend, or register your company as a sponsor. Corporate teams welcome.</p>
+        <a href="https://forms.gle/DEV_SPONSOR_PLACEHOLDER" target="_blank" class="btn-primary">Register Now <span>&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPONSORSHIP TIERS ═══ -->
+<section class="sponsors" id="ps-sponsors">
+  <div class="section-inner">
+    <div class="section-label">Sponsorship</div>
+    <div class="section-title">Invest in Impact</div>
+    <p class="section-subtitle">Your sponsorship funds the event, supports 5 nonprofits, and puts your brand in front of Chicago's tech-for-good community.</p>
+
+    <!-- ═══ FUNDING BAROMETER ═══ -->
+    <div class="funding-barometer" id="ps-barometer">
+      <div class="barometer-eyebrow">
+        <span class="barometer-dot"></span>
+        Event Funding Target
+      </div>
+      <h3>Help Us Light the Fuse</h3>
+      <p>Pulse Summit needs a minimum of <strong>$15,000</strong> to take flight &mdash; covering venue, meals, awards, and materials for all five nonprofit builds. Hit the goal together and the Summit happens. Fall short, and we'll regroup for a stronger moment. Every sponsor moves us forward.</p>
+      <div class="barometer-track">
+        <div class="barometer-fill" id="ps-barometerFill" style="width: 0%"></div>
+      </div>
+      <div class="barometer-labels">
+        <div class="raised"><strong>$0</strong> raised so far</div>
+        <div class="goal">Goal: <strong>$15,000</strong></div>
+      </div>
+      <div class="barometer-note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>If we don't reach the minimum by summit week, we'll simply reschedule to a better moment &mdash; nothing lost, just a longer runway to build something great.</span>
+      </div>
+    </div>
+
+    <div class="tier-grid">
+      <div class="tier-card">
+        <div class="tier-badge bronze">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="tier-name">Community</div>
+        <div class="tier-price"><span>$</span>2K</div>
+        <div class="tier-desc">Show your support</div>
+        <ul class="tier-perks">
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Logo on event website &amp; signage</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Social media recognition</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> 2 employee volunteer spots</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Certificate of partnership</li>
+        </ul>
+        <a href="#ps-register" class="btn-tier">Become a Sponsor</a>
+      </div>
+      <div class="tier-card featured">
+        <div class="tier-badge silver">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="tier-name">Impact</div>
+        <div class="tier-price"><span>$</span>10K</div>
+        <div class="tier-desc">Lead the charge</div>
+        <ul class="tier-perks">
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Everything in Community</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Branded mentor lounge</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> 5 employee volunteer spots</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Speaking slot at opening ceremony</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Featured in post-event impact report</li>
+        </ul>
+        <a href="#ps-register" class="btn-tier">Become a Sponsor</a>
+      </div>
+      <div class="tier-card">
+        <div class="tier-badge gold">
+          <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 010-5C7 4 9 7 12 7s5-3 7.5-3a2.5 2.5 0 010 5H18"/><path d="M18 9v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9"/><path d="M12 7v14"/></svg>
+        </div>
+        <div class="tier-name">Visionary</div>
+        <div class="tier-price"><span>$</span>25K</div>
+        <div class="tier-desc">Transform communities</div>
+        <ul class="tier-perks">
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Everything in Impact</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Presenting sponsor status</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> 10 employee volunteer spots</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Keynote speaking opportunity</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Year-round P3 partnership recognition</li>
+          <li><span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Exclusive post-event networking dinner</li>
+        </ul>
+        <a href="#ps-register" class="btn-tier">Become a Sponsor</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DONATE ═══ -->
+<section class="donate">
+  <div class="donate-bg"></div>
+  <div class="donate-overlay"></div>
+  <div class="donate-inner">
+    <div class="donate-heart">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    </div>
+    <h2>Support the Mission</h2>
+    <p>Every dollar helps fund the event, provide meals for participants, and ensure every nonprofit walks away with a real solution.</p>
+    <a href="https://kindest.com/the-pulse-of-perseverance" target="_blank" class="btn-primary" style="display:inline-flex;">Donate via Kindest <span>&rarr;</span></a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="${LOGO}" alt="P3">
+    </div>
+    <div class="footer-links">
+      <a href="https://www.pulseofp3.org" target="_blank">Website</a>
+      <a href="https://www.pulseofp3.org/about" target="_blank">About P3</a>
+      <a href="https://kindest.com/the-pulse-of-perseverance" target="_blank">Donate</a>
+      <a href="mailto:thomas@pulseofp3.org">Contact</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 Pulse of Perseverance Project. All rights reserved. &middot; Pulse Summit is a community initiative of P3.</div>
+  </div>
+</footer>
+`;
+
+  document.body.appendChild(root);
+
+  // ═══ 5. INITIALIZE BEHAVIORS ═══
+  function initPulseSummit() {
+    // Nav scroll
+    var nav = document.getElementById('ps-nav');
+    function onScroll() {
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 40);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Mobile menu toggle
+    var toggle = document.getElementById('ps-mobileToggle');
+    var links = document.getElementById('ps-navLinks');
+    if (toggle && links) {
+      toggle.addEventListener('click', function() {
+        toggle.classList.toggle('open');
+        links.classList.toggle('open');
+      });
+      links.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+          toggle.classList.remove('open');
+          links.classList.remove('open');
+        });
+      });
+    }
+
+    // Smooth scroll for internal anchors
+    root.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        var href = a.getAttribute('href');
+        if (!href || href === '#') return;
+        var t = document.querySelector(href);
+        if (t) {
+          e.preventDefault();
+          window.scrollTo({
+            top: t.getBoundingClientRect().top + window.pageYOffset - 72,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Stat counter animation
+    var statsInner = root.querySelector('.stats-inner');
+    if (statsInner && 'IntersectionObserver' in window) {
+      var statsObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelectorAll('.stat-number').forEach(function(el) {
+            var target = parseInt(el.dataset.target, 10);
+            var prefix = el.dataset.prefix || '';
+            var suffix = el.dataset.suffix || '';
+            var current = 0;
+            var step = Math.max(1, Math.ceil(target / 25));
+            var timer = setInterval(function() {
+              current += step;
+              if (current >= target) { current = target; clearInterval(timer); }
+              el.textContent = prefix + current + suffix;
+            }, 40);
+          });
+          statsObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.5 });
+      statsObserver.observe(statsInner);
+    }
+
+    // Barometer fill animation (reveal on scroll — 0% target here, but animates
+    // smoothly when raised amount is updated in the future via data-raised attr)
+    var barometer = document.getElementById('ps-barometer');
+    var fill = document.getElementById('ps-barometerFill');
+    if (barometer && fill && 'IntersectionObserver' in window) {
+      var bObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (!e.isIntersecting) return;
+          // Currently $0 of $15K — read from data-raised if set
+          var raised = parseFloat(barometer.getAttribute('data-raised') || '0');
+          var goal = parseFloat(barometer.getAttribute('data-goal') || '15000');
+          var pct = Math.max(0, Math.min(100, (raised / goal) * 100));
+          // Give a tiny sliver so fill animation is visible even at 0
+          fill.style.width = (pct > 0 ? pct : 0) + '%';
+          bObs.unobserve(e.target);
+        });
+      }, { threshold: 0.3 });
+      bObs.observe(barometer);
+    }
+
+    // Scroll-triggered fade-in for cards
+    if ('IntersectionObserver' in window) {
+      var fadeObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      root.querySelectorAll('.step, .track-card, .tier-card, .register-card, .funding-barometer').forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(24px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        fadeObserver.observe(el);
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPulseSummit);
+  } else {
+    initPulseSummit();
+  }
+})();
