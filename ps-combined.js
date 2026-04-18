@@ -95,9 +95,9 @@ html.ps-active { scroll-behavior: smooth; }
   line-height: 1.6; -webkit-font-smoothing: antialiased;
 }
 #ps-root h1, #ps-root h2, #ps-root h3, #ps-root h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.1; }
-#ps-root a { color: inherit; text-decoration: none; }
+#ps-root a { color: inherit; text-decoration: none; text-transform: none; }
 #ps-root img { max-width: 100%; display: block; }
-#ps-root button { font-family: inherit; }
+#ps-root button { font-family: inherit; text-transform: none; }
 #ps-root ul { list-style: none; }
 
 /* ═══════════ NAV ═══════════ */
@@ -111,11 +111,12 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .nav-inner {
   max-width: 1200px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 40px;
-  min-height: 68px;
+  padding: 16px 40px !important;
+  min-height: 68px !important;
+  height: auto !important;
 }
 /* Matches homepage .p3-nav-logo img (max-height: 36px). */
-#ps-root .nav-logo { height: 36px; max-height: 36px; width: auto; filter: brightness(0) invert(1); object-fit: contain; }
+#ps-root .nav-logo { height: 36px !important; max-height: 36px !important; width: auto; filter: brightness(0) invert(1); object-fit: contain; }
 #ps-root .nav-links { display: flex; align-items: center; gap: 28px; }
 #ps-root .nav-links a {
   font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.7);
@@ -125,6 +126,7 @@ html.ps-active { scroll-behavior: smooth; }
 #ps-root .nav-cta {
   background: var(--ps-green) !important; color: #fff !important;
   padding: 10px 22px; border-radius: 8px; font-weight: 600;
+  text-transform: none !important;
   transition: all 0.2s; box-shadow: 0 2px 12px rgba(22,163,74,0.3);
 }
 #ps-root .nav-cta:hover { background: var(--ps-green-dark) !important; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(22,163,74,0.4); }
@@ -214,6 +216,7 @@ html.ps-active { scroll-behavior: smooth; }
   padding: 15px 32px; border-radius: 10px;
   font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;
   border: none; cursor: pointer; letter-spacing: 0.3px;
+  text-transform: none !important;
   transition: all 0.25s; box-shadow: 0 4px 20px rgba(22,163,74,0.35);
 }
 #ps-root .btn-primary:hover { background: var(--ps-green-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(22,163,74,0.45); }
@@ -223,6 +226,7 @@ html.ps-active { scroll-behavior: smooth; }
   padding: 15px 32px; border-radius: 10px;
   font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;
   border: 1px solid var(--ps-glass-border); cursor: pointer;
+  text-transform: none !important;
   transition: all 0.25s;
 }
 #ps-root .btn-secondary:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
@@ -233,6 +237,7 @@ html.ps-active { scroll-behavior: smooth; }
   padding: 15px 32px; border-radius: 10px;
   font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;
   border: none; cursor: pointer;
+  text-transform: none !important;
   transition: all 0.25s; box-shadow: 0 4px 20px rgba(29,78,216,0.35);
 }
 #ps-root .btn-blue:hover { background: var(--ps-blue-dark); transform: translateY(-2px); }
@@ -574,14 +579,16 @@ html.ps-active { scroll-behavior: smooth; }
 }
 #ps-root .barometer-note {
   margin-top: 10px;
-  font-size: 12.5px; color: var(--ps-text-mid); line-height: 1.6;
+  font-size: 12px; color: rgba(30, 41, 59, 0.45); line-height: 1.6;
   display: flex; align-items: flex-start; gap: 8px;
+  font-style: italic;
 }
+#ps-root .barometer-note strong { color: rgba(30, 41, 59, 0.7); font-weight: 700; font-style: normal; }
 #ps-root .barometer-note svg {
-  flex-shrink: 0; width: 16px; height: 16px;
-  stroke: var(--ps-blue); fill: none; stroke-width: 2;
+  flex-shrink: 0; width: 14px; height: 14px;
+  stroke: rgba(30, 41, 59, 0.35); fill: none; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 /* ═══════════ REGISTER ═══════════ */
@@ -836,8 +843,8 @@ html.ps-active { scroll-behavior: smooth; }
 @media (max-width: 768px) {
   #ps-root section { padding: 36px 16px; }
   /* Matches homepage mobile nav: padding: 16px, height: 64px, logo max-height: 36px. */
-  #ps-root .nav-inner { padding: 16px; min-height: 64px; }
-  #ps-root .nav-logo { height: 36px; max-height: 36px; }
+  #ps-root .nav-inner { padding: 16px !important; min-height: 64px !important; height: auto !important; }
+  #ps-root .nav-logo { height: 36px !important; max-height: 36px !important; }
   #ps-root .nav-links {
     display: none; flex-direction: column; gap: 0;
     position: absolute; top: 100%; left: 0; right: 0;
@@ -851,10 +858,10 @@ html.ps-active { scroll-behavior: smooth; }
   /* Register CTA inside hamburger drawer — extra padding + breathing room so it reads as a primary action. */
   #ps-root .nav-cta {
     text-align: center; display: block;
-    margin: 14px 0 4px;
-    padding: 15px 24px;
-    font-size: 15px; letter-spacing: 0.3px;
-    border-radius: 10px;
+    margin: 18px 0 6px !important;
+    padding: 16px 28px !important;
+    font-size: 15.5px !important; letter-spacing: 0.3px;
+    border-radius: 10px !important;
     box-shadow: 0 6px 22px rgba(22,163,74,0.38);
   }
   #ps-root .mobile-toggle { display: block; }
@@ -1025,7 +1032,6 @@ html.ps-active { scroll-behavior: smooth; }
       <a href="#ps-about">About</a>
       <a href="#ps-how-it-works">How It Works</a>
       <a href="#ps-tracks">Tracks</a>
-      <a href="#ps-community">Impact</a>
       <a href="#ps-sponsors">Sponsor</a>
       <a href="#ps-register" class="nav-cta">Register</a>
     </div>
@@ -1441,7 +1447,7 @@ html.ps-active { scroll-behavior: smooth; }
             Event Funding Target
           </div>
           <h3>Help Us Light the Fuse</h3>
-          <p><strong>$15,000</strong> is the minimum to hold the event &mdash; covering venue, meals, awards, and materials for all five nonprofit builds. Our main goal of <strong>$80,000</strong> unlocks the fullest Pulse Summit experience: expanded prize pool, professional production, mentor travel stipends, and post-event implementation support.</p>
+          <p><strong>$15,000</strong> is the minimum to hold the event &mdash; covering venue, meals, awards, and materials for all five nonprofit builds.</p>
         </div>
         <div class="barometer-bar">
           <div class="barometer-track">
@@ -1456,7 +1462,7 @@ html.ps-active { scroll-behavior: smooth; }
           </div>
           <div class="barometer-note">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>If we don't reach the minimum by July 31, we'll reschedule to a better moment.</span>
+            <span>If we don't reach the minimum by <strong>July 31</strong>, we'll reschedule to a better moment.</span>
           </div>
         </div>
       </div>
