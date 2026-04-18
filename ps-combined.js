@@ -108,9 +108,10 @@ html.ps-active { scroll-behavior: smooth; }
   transition: all 0.3s;
 }
 #ps-root .nav.scrolled { background: rgba(15,29,71,0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.2); }
-/* Match homepage .p3-nav: padding 16px 40px, height driven by content (CTA 50 + 16+16 = 82). */
+/* Match homepage .p3-nav: full-width flex (NO max-width), padding 16px 40px, height driven by content (CTA 50 + 16+16 = 82). Homepage logo lands at x=40 because the nav is full viewport width with 40px padding-left. */
 #ps-root .nav-inner {
-  max-width: 1200px; margin: 0 auto;
+  max-width: none !important;
+  margin: 0 !important;
   display: flex; align-items: center; justify-content: space-between;
   padding: 16px 40px !important;
   min-height: 0 !important;
@@ -1184,7 +1185,7 @@ html.ps-active { scroll-behavior: smooth; }
       </div>
       <div class="track-card tint-green">
         <div class="track-icon green">
-          <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1.17A7 7 0 015.17 19H4a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73A2 2 0 0112 2z"/><circle cx="9" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="14" r="1" fill="currentColor" stroke="none"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.9L18.8 9.8l-4.9 1.9L12 16.6l-1.9-4.9L5.2 9.8l4.9-1.9L12 3z"/><path d="M19 15l1 2.3 2.3 1-2.3 1L19 21.6l-1-2.3-2.3-1 2.3-1L19 15z"/></svg>
         </div>
         <h3>AI Solutions</h3>
         <p>Chatbots, smart matching tools, automated intake forms, and AI-powered workflows to multiply capacity.</p>
