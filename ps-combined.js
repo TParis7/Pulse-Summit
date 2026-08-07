@@ -1319,7 +1319,7 @@ html.ps-active { scroll-behavior: smooth; }
               </div>
             </div>
             <button type="submit" class="apply-submit">Submit Application <span>&rarr;</span></button>
-            <div class="apply-fine">We'll review applications on a rolling basis and confirm the 5 selected nonprofits by June 2026.</div>
+            <div class="apply-fine">We'll review applications on a rolling basis and confirm the 5 selected nonprofits by the end of August 2026.</div>
           </form>
         </div>
 
