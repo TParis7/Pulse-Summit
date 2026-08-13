@@ -6,7 +6,7 @@
      into a scoped #ps-root. All CSS scoped with --ps- prefix vars.
      Source HTML: tparis7/Pulse-Summit/index.html
      Mockup:      https://tparis7.github.io/Pulse-Summit/
-     Dates:       October 3, 2026 (single-day · 12-hour sprint)
+     Dates:       October 17, 2026 (single-day · 12-hour sprint)
      Barometer:   $15K minimum · $80K main goal inside Invest in Impact
      ══════════════════════════════════════════════════════════════ */
 
@@ -1085,13 +1085,13 @@ html.ps-active { scroll-behavior: smooth; }
   <div class="hero-overlay"></div>
   <div class="hero-mesh"></div>
   <div class="hero-content">
-    <div class="hero-badge"><span class="pulse"></span> October 3, 2026 &middot; Chicago, IL</div>
+    <div class="hero-badge"><span class="pulse"></span> October 17, 2026 &middot; Chicago, IL</div>
     <h1>Pulse Summit<span class="line2">Technology with Heart</span></h1>
     <p class="hero-sub">A 12-hour hackathon where developers and tech companies build real digital solutions for 5 Chicago nonprofits.</p>
     <div class="hero-meta">
       <span>
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Oct 3, 2026
+        Oct 17, 2026
       </span>
       <span>
         <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1435,7 +1435,7 @@ html.ps-active { scroll-behavior: smooth; }
             Event Funding Target
           </div>
           <h3>Help Us Light the Fuse</h3>
-          <p><strong>$15,000 by July 31</strong> is the minimum to hold the event &mdash; covering venue, meals, awards, and materials for all five nonprofit builds.</p>
+          <p><strong>$15,000 by September 25</strong> is the minimum to hold the event &mdash; covering venue, meals, awards, and materials for all five nonprofit builds.</p>
         </div>
         <div class="barometer-bar">
           <div class="barometer-track">
